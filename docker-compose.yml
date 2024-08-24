@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   localstack:
     image: localstack/localstack:latest
@@ -24,6 +26,21 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=example  # Senha para o usuário root
     volumes:
       - mongo_data:/data/db  # Persistência de dados
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    ports:
+      - "8081:8081"  # Porta para acessar o Mongo Express no navegador
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root  # Usuário admin do MongoDB
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=example  # Senha do usuário admin
+      - ME_CONFIG_MONGODB_SERVER=mongo  # Nome do serviço MongoDB (como está no Docker Compose)
+      - ME_CONFIG_BASICAUTH_USERNAME=mexpress  # Usuário para autenticação básica HTTP
+      - ME_CONFIG_BASICAUTH_PASSWORD=mexpress  # Senha para autenticação básica HTTP
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true  # Habilita o modo admin no Mongo Express
+    depends_on:
+      - mongo  # Garante que o MongoDB esteja disponível antes de iniciar o Mongo Express
 
 volumes:
   localstack:
