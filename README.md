@@ -1,68 +1,77 @@
-<!--
-title: 'AWS NodeJS Example'
-description: 'This template demonstrates how to deploy a simple NodeJS function running on AWS Lambda using the Serverless Framework.'
-layout: Doc
-framework: v4
-platform: AWS
-language: nodeJS
-priority: 1
-authorLink: 'https://github.com/serverless'
-authorName: 'Serverless, Inc.'
-authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
--->
+# Hotel Reservation Service
 
-# Serverless Framework AWS NodeJS Example
+Este repositório contém o serviço de reserva de hotel, implementado utilizando Serverless Framework e LocalStack para simulação dos serviços da AWS localmente.
 
-This template demonstrates how to deploy a simple NodeJS function running on AWS Lambda using the Serverless Framework. The deployed function does not include any event definitions or any kind of persistence (database). For more advanced configurations check out the [examples repo](https://github.com/serverless/examples/) which include use cases like API endpoints, workers triggered by SQS, persistence with DynamoDB, and scheduled tasks. For details about configuration of specific events, please refer to our [documentation](https://www.serverless.com/framework/docs/providers/aws/events/).
+## Requisitos Mínimos
 
-## Usage
+Para rodar este serviço localmente, você precisará garantir que os seguintes requisitos estejam atendidos:
 
-### Deployment
+### 1. AWS CLI v2
 
-In order to deploy the example, you need to run the following command:
+Você deve ter o AWS CLI v2 instalado. Se ainda não tiver instalado, siga as instruções [aqui](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) para a instalação.
 
-```
-serverless deploy
-```
+### 2. Docker
 
-After running deploy, you should see output similar to:
+O Docker deve estar instalado e rodando em sua máquina para que o LocalStack possa ser executado. Você pode instalar o Docker seguindo as instruções [aqui](https://docs.docker.com/get-docker/).
 
-```
-Deploying "aws-node" to stage "dev" (us-east-1)
+### 3. Serverless Framework
 
-✔ Service deployed to stack aws-node-dev (90s)
+O Serverless Framework deve estar instalado em sua máquina. Você pode instalar o Serverless Framework seguindo as instruções [aqui](https://www.serverless.com/framework/docs/getting-started).
 
-functions:
-  hello: aws-node-dev-hello (1.5 kB)
-```
+### 4. Configuração do AWS CLI
 
-### Invocation
+Você precisará configurar o AWS CLI para que ele use o LocalStack em vez dos serviços reais da AWS.
 
-After successful deployment, you can invoke the deployed function by using the following command:
+1. **Arquivo `~/.aws/config`**
 
-```
-serverless invoke --function hello
-```
+   Crie ou edite o arquivo `~/.aws/config` com o seguinte conteúdo:
 
-Which should result in response similar to the following:
+   ```ini
+   [default]
+   region = us-east-1
+   output = json
+   endpoint_url = http://localhost:4566
+   ```
 
-```json
-{
-  "statusCode": 200,
-  "body": "{\"message\":\"Go Serverless v4.0! Your function executed successfully!\"}"
-}
-```
+2. **Arquivo `~/.aws/credentials`**
 
-### Local development
+   Crie ou edite o arquivo `~/.aws/credentials` com o seguinte conteúdo:
 
-The easiest way to develop and test your function is to use the Serverless Framework's `dev` command:
+   ```ini
+   [default]
+   aws_access_key_id = test
+   aws_secret_access_key = test
+   ```
 
-```
-serverless dev
-```
+### 5. Como Rodar o Serviço
 
-This will start a local emulator of AWS Lambda and tunnel your requests to and from AWS Lambda, allowing you to interact with your function as if it were running in the cloud.
+Após garantir que todos os requisitos acima estão atendidos, siga os passos abaixo para rodar o serviço localmente:
 
-Now you can invoke the function as before, but this time the function will be executed locally. Now you can develop your function locally, invoke it, and see the results immediately without having to re-deploy.
+1. **Clone o Repositório**
+   
+   ```bash
+   git clone https://github.com/joelgon/hotel-reservation.git
+   cd hotel-reservation
+   ```
 
-When you are done developing, don't forget to run `serverless deploy` to deploy the function to the cloud.
+2. **Instale as dependencias**
+   
+   ```bash
+   npm i
+   ```
+
+3. **Suba o Ambiente Local com Docker Compose**
+   
+   ```bash
+   docker-compose up
+   ```
+
+4. **Implante a Aplicação com Serverless**
+   
+   ```bash
+   serverless deploy --stage local
+   ```
+
+5. **Acesse o Mongo Express (Opcional)**
+   
+   Se precisar acessar o MongoDB visualmente, você pode utilizar o Mongo Express acessando http://localhost:8081 no navegador.
