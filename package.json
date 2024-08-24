@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "serverless-plugin-typescript": "^2.1.5",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "mongoose": "^8.5.4"
+  }
+}
