@@ -5,13 +5,16 @@ services:
     image: localstack/localstack:latest
     container_name: localstack
     ports:
-      - "4566:4566"  # Porta principal de acesso a todos os serviços
-      - "4571:4571"  # Porta adicional, usada em alguns serviços
+      - "4566-4597:4566-4597"
     environment:
-      - SERVICES=s3,sqs,lambda   # Define os serviços que você quer simular
-      - AWS_DEFAULT_REGION=us-east-1  # Define a região padrão
-      - LAMBDA_EXECUTOR=docker-reuse  # Define o executor para as Lambdas
-      - DEBUG=1  # Habilita o modo de debug para mais detalhes no log
+      - SERVICES=s3,sns,sqs,lambda,apigateway,cloudformation,logs,iam
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - LAMBDA_EXECUTOR=docker
+      - LAMBDA_REMOTE_DOCKER=false
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
     volumes:
       - "./localstack:/var/lib/localstack"  # Persistência de dados local
       - "/var/run/docker.sock:/var/run/docker.sock"  # Necessário para Lambda com executor Docker

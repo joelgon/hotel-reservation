@@ -1,18 +1,38 @@
-# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: hotel-reservation
-# "service" is the name of this project. This will also be added to your AWS resource names.
 service: hotel-reservation
-
-plugins:
-  - serverless-plugin-typescript
-
-package:
-  individually: true
 
 provider:
   name: aws
   runtime: nodejs20.x
+  stage: local
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+        - lambda:CreateFunction
+      Resource: "*"
+
+plugins:
+  - serverless-localstack
+
+custom:
+  localstack:
+    debug: true
+    stages:
+      - local  # Certifique-se de que o stage 'local' está aqui
+    host: http://localhost
+    edgePort: 4566
+    autostart: true
+    lambda:
+      mountCode:
+    docker:
+      sudo: true
 
 functions:
   hello:
-    handler: handler.hello
+    handler: src/presentation/handler.hello
+    events:
+      - http:
+          path: /hello
+          method: get
