@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 
 export const customerBalanceSchema = new Schema({
-    customerId: String,
-    value: Number,
+    customerId: { type: String, required: true, unique: true },
+    value: { type: Number, required: true, },
 })
