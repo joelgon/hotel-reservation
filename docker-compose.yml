@@ -19,6 +19,8 @@ services:
       - "./localstack:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - ./localstack-setup.sh:/etc/localstack/init/ready.d/script.sh
+    networks:
+      - app_network  # Adiciona o LocalStack à mesma rede
 
   mongo:
     image: mongo:latest
@@ -30,6 +32,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=example
     volumes:
       - mongo_data:/data/db
+    networks:
+      - app_network  # Adiciona o MongoDB à mesma rede
 
   mongo-express:
     image: mongo-express:latest
@@ -45,7 +49,13 @@ services:
       - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
     depends_on:
       - mongo  # Garante que o MongoDB esteja disponível antes de iniciar o Mongo Express
+    networks:
+      - app_network  # Adiciona o Mongo Express à mesma rede
 
 volumes:
   localstack:
   mongo_data:
+
+networks:
+  app_network:
+    driver: bridge
