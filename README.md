@@ -75,3 +75,6 @@ Após garantir que todos os requisitos acima estão atendidos, siga os passos ab
 5. **Acesse o Mongo Express (Opcional)**
    
    Se precisar acessar o MongoDB visualmente, você pode utilizar o Mongo Express acessando http://localhost:8081 no navegador.
+   | Username | Password |
+   |:--------:|:--------:|
+   | mexpress | mexpress |

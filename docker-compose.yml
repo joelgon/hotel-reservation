@@ -16,32 +16,33 @@ services:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
     volumes:
-      - "./localstack:/var/lib/localstack"  # Persistência de dados local
-      - "/var/run/docker.sock:/var/run/docker.sock"  # Necessário para Lambda com executor Docker
+      - "./localstack:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - ./localstack-setup.sh:/etc/localstack/init/ready.d/script.sh
 
   mongo:
     image: mongo:latest
     container_name: mongo
     ports:
-      - "27017:27017"  # Porta para acessar o MongoDB
+      - "27017:27017"
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root  # Usuário root inicial
-      - MONGO_INITDB_ROOT_PASSWORD=example  # Senha para o usuário root
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
     volumes:
-      - mongo_data:/data/db  # Persistência de dados
+      - mongo_data:/data/db
 
   mongo-express:
     image: mongo-express:latest
     container_name: mongo-express
     ports:
-      - "8081:8081"  # Porta para acessar o Mongo Express no navegador
+      - "8081:8081"
     environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=root  # Usuário admin do MongoDB
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=example  # Senha do usuário admin
-      - ME_CONFIG_MONGODB_SERVER=mongo  # Nome do serviço MongoDB (como está no Docker Compose)
-      - ME_CONFIG_BASICAUTH_USERNAME=mexpress  # Usuário para autenticação básica HTTP
-      - ME_CONFIG_BASICAUTH_PASSWORD=mexpress  # Senha para autenticação básica HTTP
-      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true  # Habilita o modo admin no Mongo Express
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_BASICAUTH_USERNAME=mexpress
+      - ME_CONFIG_BASICAUTH_PASSWORD=mexpress
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
     depends_on:
       - mongo  # Garante que o MongoDB esteja disponível antes de iniciar o Mongo Express
 
