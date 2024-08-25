@@ -1,6 +1,8 @@
 app: hotel-reservation
 service: hotel-reservation
 
+useDotenv: true
+
 provider:
   name: aws
   runtime: nodejs20.x
@@ -15,6 +17,7 @@ provider:
 
 plugins:
   - serverless-localstack
+  - serverless-dotenv-plugin
 
 custom:
   localstack:
@@ -36,3 +39,11 @@ functions:
       - http:
           path: /hello
           method: get
+
+  sign-up:
+    handler: src/presentation/function/sign-up.handler
+    timeout: 30
+    events:
+      - http:
+          path: /sign-up
+          method: post
