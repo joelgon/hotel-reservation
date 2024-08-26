@@ -47,3 +47,10 @@ functions:
       - http:
           path: /sign-up
           method: post
+
+  sign-in:
+    handler: src/presentation/function/sign-in.handler
+    events:
+      - http:
+          path: /sign-in
+          method: post

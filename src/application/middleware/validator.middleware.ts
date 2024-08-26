@@ -16,13 +16,15 @@ export const validateDtoMiddleware = (DtoClass: new () => object): MiddlewareObj
             const body = JSON.parse(handler.event.body ?? '{}');
             const dtoInstance = plainToClass(DtoClass, body);
             const errors: ValidationError[] = await validate(dtoInstance, {
-                whitelist: true, // Remove as propriedades não definidas no DTO
-                forbidNonWhitelisted: true, // Lança erro se houver propriedades não definidas
-                forbidUnknownValues: true, // Lança erro para valores desconhecidos
+                whitelist: true,
+                forbidNonWhitelisted: true,
+                forbidUnknownValues: true,
               });
 
             if (errors.length > 0)
                 throw new BadRequest(`Validation failed: ${formatErrors(errors)}`)
+
+            handler.event.body = JSON.stringify(dtoInstance);
         }
     };
 };

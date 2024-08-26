@@ -15,7 +15,9 @@ export class CustomerRepository {
     }
 
     async findByEmail(email: string) {
+        console.log('email', email)
         const customer = await CustomerModel.findOne({ email }).exec();
+        console.log('customer', customer)
         if (!customer) return undefined;
 
         return customer.toObject();

@@ -2,13 +2,12 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda
 import middy from '@middy/core';
 import httpErrorHandler from '@middy/http-error-handler';
 import { withRequest } from "../../infrastructure/logger";
-import { DtoValidator } from "../../application/validator";
 import { RservationRequestDto } from "../dtos/reservation-request.dto";
 
 async function reservationRequest (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
     withRequest(event, context);
 
-    await DtoValidator.validate(RservationRequestDto, JSON.parse(event.body ?? '{}'));
+    // await DtoValidator.validate(RservationRequestDto, JSON.parse(event.body ?? '{}'));
 
     return {
         statusCode: 200,
