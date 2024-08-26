@@ -4,11 +4,18 @@ import { dataBaseConnectionMiddleware } from "./database-connection.middleware";
 import { authenticateUserMiddleware } from "./authenticate-user.middleware";
 import { Handler } from "aws-lambda";
 import { LoggerMiddleware } from "./logger.middleware";
+import { validateDtoMiddleware } from "./validator.middleware";
 
-export const httpAuthMiddleware = (handler: middy.PluginObject | Handler<unknown, any>) => {
-    return middy(handler)
+export const httpAuthMiddleware = (handler: middy.PluginObject | Handler<unknown, any>, DtoClass?: new () => object) => {
+    const mid = middy(handler)
         .use(LoggerMiddleware())
-        .use(httpErrorHandler())
+        .use(httpErrorHandler());
+
+    if (DtoClass) mid.use(validateDtoMiddleware(DtoClass));
+
+    mid
         .use(dataBaseConnectionMiddleware())
         .use(authenticateUserMiddleware());
+
+    return mid;
 }
