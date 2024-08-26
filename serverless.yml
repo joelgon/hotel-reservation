@@ -34,7 +34,8 @@ custom:
 
 functions:
   hello:
-    handler: src/presentation/handler.hello
+    handler: src/presentation/function/handler.hello
+    timeout: 30
     events:
       - http:
           path: /hello
@@ -42,7 +43,6 @@ functions:
 
   sign-up:
     handler: src/presentation/function/sign-up.handler
-    timeout: 30
     events:
       - http:
           path: /sign-up

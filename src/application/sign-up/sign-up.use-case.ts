@@ -4,18 +4,27 @@ import { ICustomerRepository } from "../../domain/repositories/customer.reposito
 import { customerCreateEntity } from "../../domain/entities/customer.entity";
 import { ICustomerBalanceRepository } from "../../domain/repositories/customer-balance.repository";
 import { IEncription } from "../../domain/cipher/encription";
+import { IJsonWebToken } from "../../domain/jwt";
 
 export class SignUpUseCase {
     private readonly logger: Logger;
     private readonly customerRepository: ICustomerRepository;
     private readonly customerBalanceRepository: ICustomerBalanceRepository;
-    private readonly encription: IEncription
+    private readonly encription: IEncription;
+    private readonly jsonWebToken: IJsonWebToken
 
-    constructor(logger: Logger, customerRepository: ICustomerRepository, customerBalanceRepository: ICustomerBalanceRepository, encription: IEncription) {
+    constructor(
+        logger: Logger,
+        customerRepository: ICustomerRepository,
+        customerBalanceRepository: ICustomerBalanceRepository,
+        encription: IEncription,
+        jsonWebToken: IJsonWebToken
+    ) {
         this.logger = logger;
         this.customerRepository = customerRepository;
         this.customerBalanceRepository = customerBalanceRepository;
         this.encription = encription;
+        this.jsonWebToken = jsonWebToken
     }
 
     async execute(body: customerCreateEntity) {
@@ -30,6 +39,8 @@ export class SignUpUseCase {
 
         await this.customerBalanceRepository.create({ customerId: customer._id.toString(), value: 0 });
 
-        return { ...customer, password: undefined};
+        const token = this.jsonWebToken.sign(customer._id.toString());
+
+        return { customer: { ...customer, password: undefined }, token };
     }
 }
