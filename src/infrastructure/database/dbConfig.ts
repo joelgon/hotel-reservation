@@ -6,7 +6,7 @@ if (!MONGO_USER || !MONGO_PASSWORD || !DATABASE || !MONGO_HOST || !MONGO_PORT) {
   throw new Error('Environment variables for MongoDB connection are not set properly');
 }
 
-const uri = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${DATABASE}?authSource=admin`
+const uri = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${DATABASE}?authSource=admin&replicaSet=rs0`
 
 export const connectToDatabase = async (): Promise<typeof mongoose> => {
   try {
