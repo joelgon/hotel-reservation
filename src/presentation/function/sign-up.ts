@@ -25,4 +25,4 @@ async function signUp(event: APIGatewayProxyEvent, context: Context): Promise<AP
     };
 }
 
-export const handler = httpMiddleware(signUp, SignUpDto);
+export const handler = httpMiddleware(signUp, { bodyDto: SignUpDto });

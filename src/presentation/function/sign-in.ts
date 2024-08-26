@@ -23,4 +23,4 @@ async function signIn(event: APIGatewayProxyEvent, context: Context): Promise<AP
     };
 }
 
-export const handler = httpMiddleware(signIn, SignInDto);
+export const handler = httpMiddleware(signIn, { bodyDto: SignInDto });

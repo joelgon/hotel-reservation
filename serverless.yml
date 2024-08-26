@@ -54,3 +54,10 @@ functions:
       - http:
           path: /sign-in
           method: post
+
+  deposit:
+    handler: src/presentation/function/deposit.handler
+    events:
+      - http:
+          path: /deposit/{customerId}
+          method: post
