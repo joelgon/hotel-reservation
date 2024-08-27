@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
-import { logger, withRequest } from '../../infrastructure/logger';
+import { logger, withRequest } from '../../infra/logger';
 import { httpAuthMiddleware } from '../../application/middleware/http-auth.middleware';
 
 

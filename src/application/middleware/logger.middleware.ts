@@ -1,6 +1,6 @@
 import { MiddlewareObj } from '@middy/core';
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { withRequest } from '../../infrastructure/logger';
+import { withRequest } from '../../infra/logger';
 
 export const LoggerMiddleware = (): MiddlewareObj<APIGatewayProxyEvent> => {
     return {

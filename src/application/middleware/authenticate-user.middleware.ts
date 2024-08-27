@@ -1,8 +1,8 @@
 import { MiddlewareObj } from '@middy/core';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { Unauthorized } from 'http-errors'
-import { JsonWebToken } from '../../infrastructure/jwt';
-import { CustomerRepository } from '../../infrastructure/database/repositories/customer.repository';
+import { JsonWebToken } from '../../infra/jwt';
+import { CustomerRepository } from '../../infra/database/repositories/customer.repository';
 
 export const authenticateUserMiddleware = (): MiddlewareObj<APIGatewayProxyEvent> => {
     return {

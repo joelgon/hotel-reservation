@@ -1,11 +1,11 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
-import { logger } from "../../infrastructure/logger";
+import { logger } from "../../infra/logger";
 import { SignUpDto } from "../dtos/sign-up.dto";
-import { CustomerRepository } from "../../infrastructure/database/repositories/customer.repository";
+import { CustomerRepository } from "../../infra/database/repositories/customer.repository";
 import { SignUpUseCase } from "../../application/use-case/sign-up.use-case";
-import { CustomerBalanceRepository } from "../../infrastructure/database/repositories/customer-balance.repository";
-import { Encription } from "../../infrastructure/cipher/encription";
-import { JsonWebToken } from "../../infrastructure/jwt";
+import { CustomerBalanceRepository } from "../../infra/database/repositories/customer-balance.repository";
+import { Encription } from "../../infra/cipher/encription";
+import { JsonWebToken } from "../../infra/jwt";
 import { httpMiddleware } from "../../application/middleware/http.middleware";
 
 async function signUp(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {

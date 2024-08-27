@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 import middy from '@middy/core';
 import httpErrorHandler from '@middy/http-error-handler';
-import { withRequest } from "../../infrastructure/logger";
+import { withRequest } from "../../infra/logger";
 import { RservationRequestDto } from "../dtos/reservation-request.dto";
 
 async function reservationRequest (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
