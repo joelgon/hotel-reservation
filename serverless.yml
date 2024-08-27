@@ -33,12 +33,12 @@ custom:
       sudo: true
 
 functions:
-  hello:
-    handler: src/presentation/function/handler.hello
+  seedHotel:
+    handler: src/presentation/function/seed-hotel.handler
     timeout: 30
     events:
       - http:
-          path: /hello
+          path: /seed-hotel
           method: get
 
   sign-up:
