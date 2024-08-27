@@ -60,6 +60,7 @@ resources:
           deadLetterTargetArn:
             Fn::GetAtt: [create_reservation_dlq, Arn]
           maxReceiveCount: 5
+        VisibilityTimeout: 60
 
     generate_proof_dlq:
       Type: AWS::SQS::Queue
@@ -76,6 +77,7 @@ resources:
           deadLetterTargetArn:
             Fn::GetAtt: [generate_proof_dlq, Arn]
           maxReceiveCount: 5
+        VisibilityTimeout: 60
 
 functions:
   seedHotel:

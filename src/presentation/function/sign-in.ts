@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { Context } from "vm";
-import { httpMiddleware } from "../../application/middleware/http.middleware";
+import { noAuthMiddleware } from "../../application/middleware/no-auth.middleware";
 import { SignInDto } from "../dtos/sign-in.dto";
 import { SignInUseCase } from "../../application/use-case/sign-in.use-case";
 import { logger } from "../../infra/logger";
@@ -23,4 +23,4 @@ async function signIn(event: APIGatewayProxyEvent, context: Context): Promise<AP
     };
 }
 
-export const handler = httpMiddleware(signIn, { bodyDto: SignInDto });
+export const handler = noAuthMiddleware(signIn, { bodyDto: SignInDto });

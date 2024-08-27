@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 import { RservationRequestDto } from "../dtos/reservation-request.dto";
-import { httpAuthMiddleware } from "../../application/middleware/http-auth.middleware";
+import { authMiddleware } from "../../application/middleware/auth.middleware";
 import { ReservationRequestUseCase } from "../../application/use-case/reservation-request.use-case";
 import { customerEntity } from "../../domain/entities/customer.entity";
 import { ReservationRepository } from "../../infra/database/repositories/reservation.repository";
@@ -17,12 +17,11 @@ async function reservationRequest (event: APIGatewayProxyEvent, context: Context
     const sendMessaging = new SendMessaging();
     const reservationRequestUseCase = new ReservationRequestUseCase(logger, reservationRepository, roomRepository, sendMessaging);
 
+    const reservation = await reservationRequestUseCase.execute(customer, body);
     return {
         statusCode: 200,
-        body: JSON.stringify({
-          message: 'Go Serverless v4.0! Your function executed successfully!'
-        })
+        body: JSON.stringify(reservation)
       };
 }
 
-export const handler = httpAuthMiddleware(reservationRequest, { bodyDto: RservationRequestDto });
+export const handler = authMiddleware(reservationRequest, { bodyDto: RservationRequestDto });

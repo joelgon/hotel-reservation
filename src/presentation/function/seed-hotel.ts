@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
 import { logger } from '../../infra/logger';
-import { httpMiddleware } from '../../application/middleware/http.middleware';
+import { noAuthMiddleware } from '../../application/middleware/no-auth.middleware';
 import { HotelModel } from '../../infra/database/model/hotel.model';
 import { RoomModel } from '../../infra/database/model/room.model';
 
@@ -48,4 +48,4 @@ async function seedHotel(event: APIGatewayProxyEvent, context: Context): Promise
   };
 };
 
-export const handler = httpMiddleware(seedHotel)
+export const handler = noAuthMiddleware(seedHotel)

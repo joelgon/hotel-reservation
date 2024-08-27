@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 import { LockItemModel } from "../model/lock-item.model";
+import { logger } from "../../logger";
 
 export class LockItemRepository {
     async create(_id: string) {
@@ -10,6 +11,7 @@ export class LockItemRepository {
 
             return lockItem.toObject();
         } catch (error) {
+            logger.error({ error }, LockItemRepository.name)
             if (error.code === 11000) return undefined;
             throw error;
         }

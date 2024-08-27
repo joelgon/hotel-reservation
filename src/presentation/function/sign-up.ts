@@ -6,7 +6,7 @@ import { SignUpUseCase } from "../../application/use-case/sign-up.use-case";
 import { CustomerBalanceRepository } from "../../infra/database/repositories/customer-balance.repository";
 import { Encription } from "../../infra/cipher/encription";
 import { JsonWebToken } from "../../infra/jwt";
-import { httpMiddleware } from "../../application/middleware/http.middleware";
+import { noAuthMiddleware } from "../../application/middleware/no-auth.middleware";
 
 async function signUp(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
     const body = JSON.parse(event.body ?? '{}');
@@ -25,4 +25,4 @@ async function signUp(event: APIGatewayProxyEvent, context: Context): Promise<AP
     };
 }
 
-export const handler = httpMiddleware(signUp, { bodyDto: SignUpDto });
+export const handler = noAuthMiddleware(signUp, { bodyDto: SignUpDto });

@@ -5,7 +5,7 @@ import { DepositUseCase } from "../../application/use-case/deposit.use-case";
 import { logger } from "../../infra/logger";
 import { CustomerBalanceRepository } from "../../infra/database/repositories/customer-balance.repository";
 import { ExtractRepository } from "../../infra/database/repositories/extract.repository";
-import { httpAuthMiddleware } from "../../application/middleware/http-auth.middleware";
+import { authMiddleware } from "../../application/middleware/auth.middleware";
 import { LockItemRepository } from "../../infra/database/repositories/lock-item.repository";
 
 async function deposit(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
@@ -25,4 +25,4 @@ async function deposit(event: APIGatewayProxyEvent, context: Context): Promise<A
     };
 }
 
-export const handler = httpAuthMiddleware(deposit, { bodyDto: DepositDto });
+export const handler = authMiddleware(deposit, { bodyDto: DepositDto });
