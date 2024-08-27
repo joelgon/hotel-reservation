@@ -6,6 +6,7 @@ import { logger } from "../../infrastructure/logger";
 import { CustomerBalanceRepository } from "../../infrastructure/database/repositories/customer-balance.repository";
 import { ExtractRepository } from "../../infrastructure/database/repositories/extract.repository";
 import { httpAuthMiddleware } from "../../application/middleware/http-auth.middleware";
+import { LockItemRepository } from "../../infrastructure/database/repositories/lock-item.repository";
 
 async function deposit(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
     const body = JSON.parse(event.body ?? '{}') as DepositDto;
@@ -13,7 +14,8 @@ async function deposit(event: APIGatewayProxyEvent, context: Context): Promise<A
 
     const customerBalanceRepository = new CustomerBalanceRepository();
     const extractRepository = new ExtractRepository()
-    const depositUseCase = new DepositUseCase(logger, customerBalanceRepository, extractRepository);
+    const lockItemRepository = new LockItemRepository();
+    const depositUseCase = new DepositUseCase(logger, customerBalanceRepository, extractRepository, lockItemRepository);
 
     await depositUseCase.execute(customer, body.value);
 

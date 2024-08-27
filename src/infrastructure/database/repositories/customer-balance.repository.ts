@@ -7,17 +7,17 @@ export class CustomerBalanceRepository {
         return (await customerBalanceModel.save()).toObject();
     }
 
-    async findByIdAndLock(customerId: string, session?: ClientSession) {
-        const customerBalanceModel = await CustomerBalanceModel.findOneAndUpdate({ customerId, lock: false }, { lock: true }, { session });
+    async findOne(customerId: string, session?: ClientSession) {
+        const customerBalanceModel = await CustomerBalanceModel.findOne({ customerId }, undefined, { session });
 
         if (!customerBalanceModel) return undefined;
 
         return customerBalanceModel.toObject();
     }
 
-    async updateAndUnLock({ customerId, value }: { customerId: string, value: number }, session?: ClientSession): Promise<boolean> {
-        const { matchedCount, modifiedCount } = await CustomerBalanceModel.updateOne({ customerId, lock: true }, { value, lock: false }, { session });
+    async update({ customerId, value }: { customerId: string, value: number }, session?: ClientSession) {
+        const { matchedCount, modifiedCount } = await CustomerBalanceModel.updateOne({ customerId }, { value }, { session });
 
-        return matchedCount > 0 && modifiedCount > 0;
+        return matchedCount >= 1 && modifiedCount >= 1;
     }
 }

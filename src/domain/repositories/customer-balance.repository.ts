@@ -3,6 +3,6 @@ import { customerBalanceCreateEntity, customerBalanceEntity } from "../entities/
 
 export interface ICustomerBalanceRepository {
     create(body: customerBalanceCreateEntity): Promise<customerBalanceEntity>;
-    findByIdAndLock(customerId: string, session?: ClientSession): Promise<customerBalanceEntity | undefined>;
-    updateAndUnLock({ customerId, value }: { customerId: string, value: number }, session?: ClientSession): Promise<boolean>;
+    findOne(customerId: string, session?: ClientSession): Promise<customerBalanceEntity | undefined>;
+    update({ customerId, value }: { customerId: string, value: number }, session?: ClientSession): Promise<boolean>;
 }
