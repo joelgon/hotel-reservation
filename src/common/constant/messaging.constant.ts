@@ -1,0 +1,1 @@
+export const CREATE_RESERVATION = 'create_reservation.fifo';

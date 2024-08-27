@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@aws-sdk/client-sqs": "^3.637.0",
     "@types/aws-lambda": "^8.10.143",
     "@types/bcryptjs": "^2.4.6",
     "@types/big.js": "^6.2.2",

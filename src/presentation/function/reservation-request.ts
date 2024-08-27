@@ -1,13 +1,21 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
-import middy from '@middy/core';
-import httpErrorHandler from '@middy/http-error-handler';
-import { withRequest } from "../../infra/logger";
 import { RservationRequestDto } from "../dtos/reservation-request.dto";
+import { httpAuthMiddleware } from "../../application/middleware/http-auth.middleware";
+import { ReservationRequestUseCase } from "../../application/use-case/reservation-request.use-case";
+import { customerEntity } from "../../domain/entities/customer.entity";
+import { ReservationRepository } from "../../infra/database/repositories/reservation.repository";
+import { logger } from "../../infra/logger";
+import { RoomRepository } from "../../infra/database/repositories/room.repository";
+import { SendMessaging } from "../../infra/messaging/send-messaging";
 
 async function reservationRequest (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
-    withRequest(event, context);
+  const body = JSON.parse(event.body ?? '{}') as RservationRequestDto;
+    const customer = event.requestContext.authorizer as customerEntity;
 
-    // await DtoValidator.validate(RservationRequestDto, JSON.parse(event.body ?? '{}'));
+    const reservationRepository = new ReservationRepository();
+    const roomRepository = new RoomRepository();
+    const sendMessaging = new SendMessaging();
+    const reservationRequestUseCase = new ReservationRequestUseCase(logger, reservationRepository, roomRepository, sendMessaging);
 
     return {
         statusCode: 200,
@@ -17,4 +25,4 @@ async function reservationRequest (event: APIGatewayProxyEvent, context: Context
       };
 }
 
-export const handler = middy(reservationRequest).use(httpErrorHandler());
+export const handler = httpAuthMiddleware(reservationRequest, { bodyDto: RservationRequestDto });
