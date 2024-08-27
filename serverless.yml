@@ -61,3 +61,10 @@ functions:
       - http:
           path: /deposit
           method: post
+
+  reservation-request:
+    handler: src/presentation/function/reservation-request.handler
+    events:
+      - http:
+          path: /reservation-request
+          method: post
