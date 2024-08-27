@@ -1,8 +1,9 @@
 import { Schema } from "mongoose";
 
 export const reservationSchme = new Schema({
-    customerId: String,
-    hotelId: String,
-    checkIn: Date,
-    checkOut: Date,
+    customerId: { type: String, required: true, ref: 'customer' },
+    hotelId: { type: String, required: true, index: true, ref: 'hotel' },
+    roomId: { type: String, required: true, ref: 'room' },
+    checkIn: { type: Date, required: true, index: true },
+    checkOut: { type: Date, required: true, index: true }
 })
