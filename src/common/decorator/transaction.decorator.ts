@@ -20,7 +20,6 @@ export function Transaction() {
         await session.commitTransaction();
         return result;
       } catch (error) {
-        console.log('error error error error error error error error error error error error error error error error error error error error error')
         await session.abortTransaction();
         throw error;
       } finally {

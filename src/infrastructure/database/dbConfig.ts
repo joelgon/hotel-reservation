@@ -1,16 +1,12 @@
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose from 'mongoose';
 
-const { MONGO_USER, MONGO_PASSWORD, DATABASE, MONGO_HOST, MONGO_PORT } = process.env;
-
-if (!MONGO_USER || !MONGO_PASSWORD || !DATABASE || !MONGO_HOST || !MONGO_PORT) {
+if (!process.env.MONGO_URI) {
   throw new Error('Environment variables for MongoDB connection are not set properly');
 }
 
-const uri = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${DATABASE}?authSource=admin&replicaSet=rs0`
-
 export const connectToDatabase = async (): Promise<typeof mongoose> => {
   try {
-    return mongoose.connect(uri);
+    return mongoose.connect(process.env.MONGO_URI ?? '');
   } catch (error) {
     throw error;
   }

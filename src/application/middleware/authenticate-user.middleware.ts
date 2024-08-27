@@ -19,7 +19,6 @@ export const authenticateUserMiddleware = (): MiddlewareObj<APIGatewayProxyEvent
 
             if (!customer) if (!token) throw new Unauthorized();
             
-            console.log('customer', customer);
             handler.event.requestContext.authorizer = customer;
         }
     };
