@@ -1,0 +1,7 @@
+{
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "endOfLine": "auto",
+  "usePrettierrc": false,
+  "printWidth": 150
+}
