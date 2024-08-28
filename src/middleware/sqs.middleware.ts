@@ -1,15 +1,14 @@
-import middy from "@middy/core";
-import { Handler } from "aws-lambda";
-import { LoggerMiddleware } from "./logger.middleware";
-import { dataBaseConnectionMiddleware } from "./database-connection.middleware";
-import { validateSqsDtoMiddleware } from "./validator-sqs.middleware";
+import middy from '@middy/core';
+import { Handler } from 'aws-lambda';
 
-export const sqsMiddleware = (handler: middy.PluginObject | Handler<unknown, any>, { bodyDto }: { bodyDto?: new () => object } = {}) => {
-    const mid = middy(handler)
-        .use(LoggerMiddleware())
-        .use(dataBaseConnectionMiddleware());
+import { dataBaseConnectionMiddleware } from './database-connection.middleware';
+import { LoggerMiddleware } from './logger.middleware';
+import { validateSqsDtoMiddleware } from './validator-sqs.middleware';
 
-    if (bodyDto) mid.use(validateSqsDtoMiddleware(bodyDto));
+export const sqsMiddleware = (handler: middy.PluginObject | Handler<unknown, unknown>, { bodyDto }: { bodyDto?: new () => object } = {}) => {
+  const mid = middy(handler).use(LoggerMiddleware()).use(dataBaseConnectionMiddleware());
 
-    return mid;
-}
+  if (bodyDto) mid.use(validateSqsDtoMiddleware(bodyDto));
+
+  return mid;
+};

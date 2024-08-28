@@ -1,20 +1,21 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
-import { DepositService } from "../services/deposit.service";
-import { authMiddleware } from "../middleware/auth.middleware";
-import { DepositDto } from "../dtos/deposit.dto";
-import { CustomerBalance } from "../model/customer-balance.model";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
-async function deposit(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
-    const body = JSON.parse(event.body ?? '{}') as DepositDto;
-    const customerBalance = event.requestContext.authorizer as CustomerBalance;
+import { DepositDto } from '../dtos/deposit.dto';
+import { authMiddleware } from '../middleware/auth.middleware';
+import { CustomerBalance } from '../model/customer-balance.model';
+import { DepositService } from '../services/deposit.service';
 
-    const depositService = new DepositService();
-    await depositService.execute(customerBalance, body.value);
+async function deposit(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+  const body = JSON.parse(event.body ?? '{}') as DepositDto;
+  const customerBalance = event.requestContext.authorizer as CustomerBalance;
 
-    return {
-        statusCode: 201,
-        body: ''
-    };
+  const depositService = new DepositService();
+  await depositService.execute(customerBalance, body.value);
+
+  return {
+    statusCode: 201,
+    body: '',
+  };
 }
 
 export const handler = authMiddleware(deposit, { bodyDto: DepositDto });

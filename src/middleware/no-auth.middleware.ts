@@ -1,22 +1,20 @@
-import middy, { MiddyfiedHandler } from "@middy/core";
-import httpErrorHandler from "@middy/http-error-handler";
-import { dataBaseConnectionMiddleware } from "./database-connection.middleware";
-import { Handler } from "aws-lambda";
-import { LoggerMiddleware } from "./logger.middleware";
-import { validateDtoMiddleware } from "./validator.middleware";
-import { pathParamterValidatorMiddleware } from "./path-paramter-validator.middleware";
+import middy, { MiddyfiedHandler } from '@middy/core';
+import httpErrorHandler from '@middy/http-error-handler';
+import { Context, Handler } from 'aws-lambda';
 
-export const noAuthMiddleware = (handler: middy.PluginObject | Handler<unknown, any>, { bodyDto, pathParametersDto }: { bodyDto?: new () => object, pathParametersDto?: new () => object } = {}): MiddyfiedHandler<any, any, any, any, any> => {
-    const mid = middy(handler)
-        .use(LoggerMiddleware())
-        .use(httpErrorHandler());
+import { dataBaseConnectionMiddleware } from './database-connection.middleware';
+import { LoggerMiddleware } from './logger.middleware';
+import { validateDtoMiddleware } from './validator.middleware';
 
-    if (pathParametersDto) mid.use(pathParamterValidatorMiddleware(pathParametersDto))
+export const noAuthMiddleware = (
+  handler: middy.PluginObject | Handler<unknown, unknown>,
+  { bodyDto }: { bodyDto?: new () => object; pathParametersDto?: new () => object } = {}
+): MiddyfiedHandler<unknown, unknown, unknown, Context, Record<string, unknown>> => {
+  const mid = middy(handler).use(LoggerMiddleware()).use(httpErrorHandler());
 
-    if (bodyDto) mid.use(validateDtoMiddleware(bodyDto));
+  if (bodyDto) mid.use(validateDtoMiddleware(bodyDto));
 
-    mid
-        .use(dataBaseConnectionMiddleware());
+  mid.use(dataBaseConnectionMiddleware());
 
-    return mid;
-}
+  return mid;
+};

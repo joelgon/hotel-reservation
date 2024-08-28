@@ -4,14 +4,11 @@ import { ClientSession, startSession } from 'mongoose';
  * Decorator para gerenciar transações do MongoDB com Mongoose.
  */
 export function Transaction() {
-  return function (
-    target: any,
-    propertyName: string,
-    descriptor: PropertyDescriptor
-  ) {
+  return function (...args: [unknown, unknown, PropertyDescriptor]) {
+    const descriptor = args[2];
     const originalMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (...args: unknown[]) {
       const session: ClientSession = await startSession();
       session.startTransaction();
       try {

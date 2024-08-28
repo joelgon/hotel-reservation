@@ -2,14 +2,14 @@ import { registerDecorator, ValidationOptions, ValidationArguments } from 'class
 import { Types } from 'mongoose';
 
 export function IsObjectId(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isObjectId',
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
+        validate(value: string) {
           return Types.ObjectId.isValid(value);
         },
         defaultMessage(args: ValidationArguments) {

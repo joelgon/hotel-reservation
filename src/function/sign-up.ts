@@ -1,19 +1,20 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
-import { SignUpService } from "../services/sign-up.service";
-import { noAuthMiddleware } from "../middleware/no-auth.middleware";
-import { SignUpDto } from "../dtos/sign-up.dto";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
-async function signUp(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
-    const body = JSON.parse(event.body ?? '{}');
+import { SignUpDto } from '../dtos/sign-up.dto';
+import { noAuthMiddleware } from '../middleware/no-auth.middleware';
+import { SignUpService } from '../services/sign-up.service';
 
-    const signUpService = new SignUpService();
+async function signUp(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+  const body = JSON.parse(event.body ?? '{}');
 
-    const customer = await signUpService.execute(body);
+  const signUpService = new SignUpService();
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify(customer)
-    };
+  const customer = await signUpService.execute(body);
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(customer),
+  };
 }
 
 export const handler = noAuthMiddleware(signUp, { bodyDto: SignUpDto });

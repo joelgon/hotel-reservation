@@ -1,11 +1,13 @@
-import { compare } from "bcryptjs";
+import { compare } from 'bcryptjs';
 
 export class CompareHashProvider {
-    async execute(password: string, passwordHash: string): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => compare(password, passwordHash, (err, result) => {
-            if (err) return reject(err);
+  async execute(password: string, passwordHash: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) =>
+      compare(password, passwordHash, (err, result) => {
+        if (err) return reject(err);
 
-            return resolve(result);
-        }))
-    }
+        return resolve(result);
+      })
+    );
+  }
 }

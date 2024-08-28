@@ -1,10 +1,11 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
-import { authMiddleware } from "../middleware/auth.middleware";
-import { ReservationDto } from "../dtos/reservation.dto";
-import { ReservationService } from "../services/reservation.service";
-import { CustomerBalance } from "../model/customer-balance.model";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
-async function reservationRequest(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
+import { ReservationDto } from '../dtos/reservation.dto';
+import { authMiddleware } from '../middleware/auth.middleware';
+import { CustomerBalance } from '../model/customer-balance.model';
+import { ReservationService } from '../services/reservation.service';
+
+async function reservationRequest(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   const body = JSON.parse(event.body ?? '{}') as ReservationDto;
   const customer = event.requestContext.authorizer as CustomerBalance;
 
@@ -13,7 +14,7 @@ async function reservationRequest(event: APIGatewayProxyEvent, context: Context)
 
   return {
     statusCode: 200,
-    body: JSON.stringify(reservation)
+    body: JSON.stringify(reservation),
   };
 }
 

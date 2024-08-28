@@ -1,16 +1,19 @@
-import { Context, SQSEvent } from "aws-lambda";
-import { sqsMiddleware } from "../middleware/sqs.middleware";
-import { ProofPaymentDto } from "../dtos/proof-payment.dto";
-import { ProofPaymentService } from "../services/proof-payment.service";
+import { SQSEvent } from 'aws-lambda';
 
-async function proofPayment(event: SQSEvent, context: Context): Promise<void> {
-    await Promise.all(event.Records.map(async (record) => {
-        const body = JSON.parse(record.body ?? '{}') as ProofPaymentDto;
+import { ProofPaymentDto } from '../dtos/proof-payment.dto';
+import { sqsMiddleware } from '../middleware/sqs.middleware';
+import { ProofPaymentService } from '../services/proof-payment.service';
 
-        const proofPaymentService = new ProofPaymentService();
+async function proofPayment(event: SQSEvent): Promise<void> {
+  await Promise.all(
+    event.Records.map(async (record) => {
+      const body = JSON.parse(record.body ?? '{}') as ProofPaymentDto;
 
-        await proofPaymentService.execute(body);
-    }));
+      const proofPaymentService = new ProofPaymentService();
+
+      await proofPaymentService.execute(body);
+    })
+  );
 }
 
 export const handler = sqsMiddleware(proofPayment, { bodyDto: ProofPaymentDto });
