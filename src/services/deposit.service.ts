@@ -4,11 +4,11 @@ import { ClientSession } from 'mongoose';
 import { Logger } from 'pino';
 
 import { Transaction } from '../common/decorator/transaction.decorator';
+import { logger } from '../common/utils/logger.util';
 import { CustomerBalance } from '../model/customer-balance.model';
 import { CustomerBalanceRepository } from '../repositories/customer-balance.repository';
 import { ExtractRepository } from '../repositories/extract.repository';
 import { LockItemRepository } from '../repositories/lock-item.repository';
-import { logger } from '../common/utils/logger.util';
 
 export class DepositService {
   private readonly logger: Logger;
