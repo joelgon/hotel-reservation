@@ -1,9 +1,10 @@
 import { Transform } from "class-transformer";
-import { IsISO8601, IsNumber, IsString } from "class-validator";
+import { IsISO8601, IsNumber } from "class-validator";
+import { IsObjectId } from "../../common/decorator/object-id.decorator";
 
 export class ProofPaymentDto {
-    @IsString()
-    name: string;
+    @IsObjectId()
+    customerId: string;
 
     @IsNumber()
     totalValue: number;
