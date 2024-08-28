@@ -2,46 +2,39 @@ import { Logger } from "pino";
 import { PreconditionFailed } from 'http-errors';
 import { Big } from 'big.js'
 import { ClientSession } from "mongoose";
-import { IReservationRepository, IReservationRequest } from "../../domain/repositories/reservation.repository";
-import { IRoomRepository } from "../../domain/repositories/room.repository";
-import { ISendMessaging } from "../../domain/messaging";
-import { Transaction } from "../../common/decorator/transaction.decorator";
-import { IProofPaymentMessaging } from "../../domain/messaging/proof-payment.messaging";
-import { ILockItemRepository } from "../../domain/repositories/lock-item.repository";
-import { ICustomerBalanceRepository } from "../../domain/repositories/customer-balance.repository";
-import { IExtractRepository } from "../../domain/repositories/extract.repository";
-import { customerBalanceEntity } from "../../domain/entities/customer-balance.entity";
-import dayjs = require("dayjs");
+import * as dayjs from 'dayjs';
+import { ReservationRepository } from "../repositories/reservation.repository";
+import { RoomRepository } from "../repositories/room.repository";
+import { LockItemRepository } from "../repositories/lock-item.repository";
+import { CustomerBalanceRepository } from "../repositories/customer-balance.repository";
+import { ExtractRepository } from "../repositories/extract.repository";
+import { SendMessaging } from "../utils/messaging/send-messaging";
+import { logger } from "../utils/logger";
+import { Transaction } from "../common/decorator/transaction.decorator";
+import { CustomerBalance } from "../model/customer-balance.model";
+import { ReservationDto } from "../dtos/reservation.dto";
 
-export class ReservationUseCase {
+export class ReservationService {
     private readonly logger: Logger;
-    private readonly reservationRepository: IReservationRepository;
-    private readonly roomRepository: IRoomRepository;
-    private readonly lockItemRepository: ILockItemRepository;
-    private readonly customerBalanceRepository: ICustomerBalanceRepository;
-    private readonly extractRepository: IExtractRepository;
-    private readonly sendMessaging: ISendMessaging;
+    private readonly reservationRepository: ReservationRepository;
+    private readonly roomRepository: RoomRepository;
+    private readonly lockItemRepository: LockItemRepository;
+    private readonly customerBalanceRepository: CustomerBalanceRepository;
+    private readonly extractRepository: ExtractRepository;
+    private readonly sendMessaging: SendMessaging;
 
-    constructor(
-        logger: Logger,
-        reservationRepository: IReservationRepository,
-        roomRepository: IRoomRepository,
-        lockItemRepository: ILockItemRepository,
-        customerBalanceRepository: ICustomerBalanceRepository,
-        extractRepository: IExtractRepository,
-        sendMessaging: ISendMessaging
-    ) {
+    constructor() {
         this.logger = logger;
-        this.reservationRepository = reservationRepository;
-        this.roomRepository = roomRepository;
-        this.lockItemRepository = lockItemRepository;
-        this.sendMessaging = sendMessaging;
-        this.customerBalanceRepository = customerBalanceRepository;
-        this.extractRepository = extractRepository;
+        this.reservationRepository = new ReservationRepository();
+        this.roomRepository = new RoomRepository();
+        this.lockItemRepository = new LockItemRepository();
+        this.customerBalanceRepository = new CustomerBalanceRepository();
+        this.extractRepository = new ExtractRepository();
+        this.sendMessaging = new SendMessaging();
     }
 
     @Transaction()
-    async execute(oldCustomerBalance: customerBalanceEntity, reservationRequest: IReservationRequest, session?: ClientSession) {
+    async execute(oldCustomerBalance: CustomerBalance, reservationRequest: ReservationDto, session?: ClientSession) {
         try {
             await Promise.all([
                 this.lockItemRepository.create(reservationRequest.hotelId),

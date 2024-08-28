@@ -84,14 +84,14 @@ functions:
           method: post
 
   deposit:
-    handler: src/presentation/function/deposit.handler
+    handler: src/function/deposit.handler
     events:
       - http:
           path: /deposit
           method: post
 
   reservation:
-    handler: src/presentation/function/reservation.handler
+    handler: src/function/reservation.handler
     events:
       - http:
           path: /reservation
