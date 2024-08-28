@@ -2,7 +2,7 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { FailedDependency } from 'http-errors';
 
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 interface IGetFile {
   bucket: string;
@@ -15,7 +15,7 @@ export class GetPresignedUrlProvider {
 
   constructor() {
     this.client = new S3Client({
-      endpoint: 'http://s3.us-east-1.localhost.localstack.cloud:4566',
+      endpoint: process.env.S3_ENDPOINT,
     });
   }
 

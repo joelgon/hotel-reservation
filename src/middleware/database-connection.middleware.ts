@@ -2,7 +2,7 @@ import { MiddlewareObj } from '@middy/core';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
 import { connectToDatabase, disconnectFromDatabase } from '../config/dbConfig';
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 export const dataBaseConnectionMiddleware = (): MiddlewareObj<APIGatewayProxyEvent> => {
   return {

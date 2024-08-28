@@ -41,6 +41,12 @@ custom:
     docker:
       sudo: true
 
+  jest:
+    stages:
+      - local
+    jestConfig:
+      coverage: true
+
 resources:
   Resources:
     generate_proof_dlq:
@@ -107,6 +113,6 @@ functions:
   proof-payment:
     handler: src/function/proof-payment.handler
     events:
-      - sqs: 
+      - sqs:
           arn: arn:aws:sqs:us-east-1:000000000000:generate_proof.fifo
           batchSize: 1

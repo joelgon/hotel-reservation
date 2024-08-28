@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 if (!process.env.MONGO_URI) {
   throw new Error('Environment variables for MongoDB connection are not set properly');

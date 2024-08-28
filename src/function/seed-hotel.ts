@@ -3,7 +3,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { noAuthMiddleware } from '../middleware/no-auth.middleware';
 import { HotelModel } from '../model/hotel.model';
 import { Room, RoomModel } from '../model/room.model';
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 async function seedHotel(): Promise<APIGatewayProxyResult> {
   logger.info({}, 'start seed hotel');

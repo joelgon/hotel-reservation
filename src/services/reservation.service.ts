@@ -16,7 +16,7 @@ import { HotelRepository } from '../repositories/hotel.repository';
 import { LockItemRepository } from '../repositories/lock-item.repository';
 import { ReservationRepository } from '../repositories/reservation.repository';
 import { RoomRepository } from '../repositories/room.repository';
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 export class ReservationService {
   private readonly logger: Logger;

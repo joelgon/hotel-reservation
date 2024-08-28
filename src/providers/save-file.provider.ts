@@ -1,6 +1,6 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 interface ISaveFile {
   bucket: string;
@@ -14,7 +14,7 @@ export class SaveFileProvider {
 
   constructor() {
     this.client = new S3Client({
-      endpoint: 'http://s3.us-east-1.localhost.localstack.cloud:4566',
+      endpoint: process.env.S3_ENDPOINT,
     });
   }
 

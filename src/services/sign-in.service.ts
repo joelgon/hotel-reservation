@@ -5,7 +5,7 @@ import { SignInDto } from '../dtos/sign-in.dto';
 import { AuthProvider } from '../providers/auth.provider';
 import { CompareHashProvider } from '../providers/compare-hash.provider';
 import { CustomerRepository } from '../repositories/customer.repository';
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 export class SignInService {
   private readonly logger: Logger;

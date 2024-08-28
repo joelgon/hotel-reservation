@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 import { LockItem, LockItemModel } from '../model/lock-item.model';
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 export class LockItemRepository {
   async create(_id: string): Promise<LockItem | undefined> {

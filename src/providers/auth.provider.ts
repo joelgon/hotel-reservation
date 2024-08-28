@@ -2,7 +2,7 @@ import { Unauthorized } from 'http-errors';
 import * as jsonWebToken from 'jsonwebtoken';
 import { Logger } from 'pino';
 
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 export class AuthProvider {
   private readonly secret = process.env.JWT_SECRET ?? 'default_secret';

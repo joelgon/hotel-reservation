@@ -1,7 +1,7 @@
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 import { NotFound } from 'http-errors';
 
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 interface ISendMessage<T extends object> {
   body: T;
@@ -20,7 +20,7 @@ export class SendMessagingProvider {
   async execute<T extends object = object>({ body, deduplicationId, groupId, queueName }: ISendMessage<T>): Promise<boolean> {
     try {
       const command = new SendMessageCommand({
-        QueueUrl: `http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/${queueName}`,
+        QueueUrl: `${process.env.QUEUE_URL}${queueName}`,
         MessageBody: JSON.stringify(body),
         MessageDeduplicationId: deduplicationId,
         MessageGroupId: groupId,

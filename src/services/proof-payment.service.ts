@@ -7,7 +7,7 @@ import { ProofPaymentDto } from '../dtos/proof-payment.dto';
 import { GenerateProofProvider } from '../providers/generate-prof.provider';
 import { SaveFileProvider } from '../providers/save-file.provider';
 import { CustomerRepository } from '../repositories/customer.repository';
-import { logger } from '../utils/logger.util';
+import { logger } from '../common/utils/logger.util';
 
 import 'dayjs/locale/pt-br';
 dayjs.locale('pt-br');
