@@ -2,7 +2,7 @@ import { MiddlewareObj } from '@middy/core';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { Unauthorized } from 'http-errors'
 import { JsonWebToken } from '../../infra/jwt';
-import { CustomerRepository } from '../../infra/database/repositories/customer.repository';
+import { CustomerBalanceRepository } from '../../infra/database/repositories/customer-balance.repository';
 
 export const authenticateUserMiddleware = (): MiddlewareObj<APIGatewayProxyEvent> => {
     return {
@@ -14,12 +14,12 @@ export const authenticateUserMiddleware = (): MiddlewareObj<APIGatewayProxyEvent
             const jsonWebToken = new JsonWebToken();
             const decode = jsonWebToken.verify(token);
 
-            const customerRepository = new CustomerRepository();
-            const customer = await customerRepository.findById(decode.customerId);
+            const customerBalanceRepository = new CustomerBalanceRepository();
+            const customerBalance = await customerBalanceRepository.findOne(decode.customerId);
 
-            if (!customer) if (!token) throw new Unauthorized();
+            if (!customerBalance) throw new Unauthorized();
             
-            handler.event.requestContext.authorizer = customer;
+            handler.event.requestContext.authorizer = customerBalance;
         }
     };
 };

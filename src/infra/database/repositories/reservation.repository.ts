@@ -12,7 +12,6 @@ export class ReservationRepository {
     async conflictReservations({ hotelId, checkIn, checkOut }): Promise<string[]> {
         return ReservationModel.distinct('roomId', {
             hotelId,
-            status: 'success',
             checkIn: {
                 $gte: checkIn,
                 $lte: checkOut

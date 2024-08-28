@@ -6,7 +6,6 @@ export interface reservationCreateEntity {
     roomId: string;
     checkIn: Date;
     checkOut: Date;
-    status: 'processing' | 'success' | 'error';
 }
 
 export interface reservationEntity extends reservationCreateEntity {

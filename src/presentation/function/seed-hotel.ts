@@ -25,13 +25,14 @@ async function seedHotel(event: APIGatewayProxyEvent, context: Context): Promise
 
   const roomPromises = hotels.map((hotel, index) => {
     const totalRooms = index === 0 ? 2 : Math.floor(Math.random() * 19) + 2;
+    const dailyValue = Math.floor(Math.random() * 250) + 50
     const rooms: any[] = [];
 
     for (let i = 1; i <= totalRooms; i++) {
       rooms.push({
         hotelId: hotel._id.toString(),
         roomNumber: i,
-        dailyValue: Math.floor(Math.random() * 250) + 50
+        dailyValue,
       });
     }
 

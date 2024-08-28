@@ -45,23 +45,6 @@ custom:
 
 resources:
   Resources:
-    create_reservation_dlq:
-      Type: AWS::SQS::Queue
-      Properties:
-        FifoQueue: true
-        QueueName: create_reservation_dlq.fifo
-
-    create_reservation:
-      Type: AWS::SQS::Queue
-      Properties:
-        FifoQueue: true
-        QueueName: create_reservation.fifo
-        RedrivePolicy:
-          deadLetterTargetArn:
-            Fn::GetAtt: [create_reservation_dlq, Arn]
-          maxReceiveCount: 5
-        VisibilityTimeout: 60
-
     generate_proof_dlq:
       Type: AWS::SQS::Queue
       Properties:
@@ -109,16 +92,9 @@ functions:
           path: /deposit
           method: post
 
-  reservation-request:
-    handler: src/presentation/function/reservation-request.handler
-    events:
-      - http:
-          path: /reservation-request
-          method: post
-
   reservation:
     handler: src/presentation/function/reservation.handler
     events:
-      - sqs: 
-          arn: arn:aws:sqs:us-east-1:000000000000:create_reservation.fifo
-          batchSize: 1
+      - http:
+          path: /reservation
+          method: post
