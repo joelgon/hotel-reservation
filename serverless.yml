@@ -98,7 +98,7 @@ functions:
           method: post
 
   proof-payment:
-    handler: src/presentation/function/proof-payment.handler
+    handler: src/function/proof-payment.handler
     events:
       - sqs: 
           arn: arn:aws:sqs:us-east-1:000000000000:generate_proof.fifo

@@ -1,27 +1,28 @@
 import { Logger } from "pino";
 import { PreconditionFailed } from 'http-errors'
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import * as dayjs from 'dayjs';
 
-import { ICustomerRepository } from "../../domain/repositories/customer.repository";
-import { IProofPaymentMessaging } from "../../domain/messaging/proof-payment.messaging";
-import { PROOF_PAYMENT_BUCKET, PROOF_PAYMENT_KEY } from "../../common/constant/cloud-storage.constant";
-import dayjs = require("dayjs");
+import { CustomerRepository } from "../repositories/customer.repository";
+import { SaveFile } from "../utils/cloud-storage/save-file";
+import { logger } from "../utils/logger";
+import { ProofPaymentDto } from "../dtos/proof-payment.dto";
+import { PROOF_PAYMENT_BUCKET } from "../common/constant/cloud-storage.constant";
 
 import 'dayjs/locale/pt-br';
-import { SaveFile } from "../../infra/cloud-storage/save-file";
 dayjs.locale('pt-br');
 
-export class ProofPaymentUseCase {
+export class ProofPaymentService {
     private readonly logger: Logger;
-    private readonly customerRepository: ICustomerRepository;
+    private readonly customerRepository: CustomerRepository;
     private readonly saveFile: SaveFile;
 
-    constructor(logger: Logger, customerRepository: ICustomerRepository) {
+    constructor() {
         this.logger = logger;
-        this.customerRepository = customerRepository;
+        this.customerRepository = new CustomerRepository();
     }
 
-    async execute(proofPaymentMessaging: IProofPaymentMessaging) {
+    async execute(proofPaymentMessaging: ProofPaymentDto) {
         const customer = await this.customerRepository.findById(proofPaymentMessaging.customerId);
         if (!customer) throw new PreconditionFailed();
 
@@ -125,9 +126,9 @@ export class ProofPaymentUseCase {
         const pdfBytes = await pdfDoc.save();
 
         const isSuccess = await this.saveFile.execute({ 
-            file: pdfBytes, 
-            bucket: PROOF_PAYMENT_BUCKET, 
-            contentType: 'application/pdf', 
+            file: pdfBytes,
+            bucket: PROOF_PAYMENT_BUCKET,
+            contentType: 'application/pdf',
             key: `${proofPaymentMessaging.customerId}/${proofPaymentMessaging.reservationId}`
         });
 
