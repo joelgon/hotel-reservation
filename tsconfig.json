@@ -1,17 +1,25 @@
 {
-    "compilerOptions": {
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "preserveConstEnums": true,
-      "strictNullChecks": true,
-      "sourceMap": true,
-      "allowJs": true,
-      "target": "es5",
-      "outDir": ".build",
-      "moduleResolution": "node",
-      "lib": ["es2015"],
-      "rootDir": "./"
-    }
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "preserveConstEnums": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "target": "es5",
+    "moduleResolution": "node",
+    "lib": [
+      "es2015"
+    ],
+    "rootDir": "./src",
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "eslint.config.mjs"
+  ]
 }
