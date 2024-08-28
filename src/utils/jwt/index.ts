@@ -1,4 +1,5 @@
 import * as jsonWebToken from 'jsonwebtoken';
+import { Unauthorized } from 'http-errors';
 
 export class JsonWebToken {
     private readonly secret = process.env.JWT_SECRET ?? 'default_secret'
@@ -8,6 +9,10 @@ export class JsonWebToken {
     }
 
     verify(token: string): { customerId: string } {
-        return jsonWebToken.verify(token, this.secret) as { customerId: string }
+        try {
+            return jsonWebToken.verify(token, this.secret) as { customerId: string }
+        } catch (error) {
+            throw new Unauthorized(); 
+        }
     }
 }

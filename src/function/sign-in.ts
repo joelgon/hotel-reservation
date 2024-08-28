@@ -1,22 +1,15 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { Context } from "vm";
-import { noAuthMiddleware } from "../../middleware/no-auth.middleware";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
+import { SignInService } from "../services/sign-in.service";
+import { noAuthMiddleware } from "../middleware/no-auth.middleware";
 import { SignInDto } from "../dtos/sign-in.dto";
-import { SignInUseCase } from "../../application/use-case/sign-in.use-case";
-import { logger } from "../../infra/logger";
-import { CustomerRepository } from "../../infra/database/repositories/customer.repository";
-import { CompareHash } from "../../infra/cipher/compare-hash";
-import { JsonWebToken } from "../../infra/jwt";
+
 
 async function signIn(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
     const body = JSON.parse(event.body ?? '{}');
 
-    const customerRepository = new CustomerRepository();
-    const compareHash = new CompareHash();
-    const jsonWebToken = new JsonWebToken()
-    const signInUseCase = new SignInUseCase(logger, customerRepository, compareHash, jsonWebToken);
+    const signInService = new SignInService();
 
-    const res = await signInUseCase.execute(body);
+    const res = await signInService.execute(body);
     return {
         statusCode: 200,
         body: JSON.stringify(res)
