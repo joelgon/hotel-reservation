@@ -6,6 +6,9 @@ export class ProofPaymentDto {
     @IsObjectId()
     customerId: string;
 
+    @IsObjectId()
+    reservationId: string;
+
     @IsNumber()
     totalValue: number;
 

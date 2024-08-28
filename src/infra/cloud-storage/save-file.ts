@@ -4,7 +4,8 @@ import { logger } from "../logger";
 interface ISaveFile {
     bucket: string;
     key: string;
-    file: Buffer
+    contentType: 'application/pdf';
+    file: string | Uint8Array | Buffer
 }
 
 export class SaveFile {
@@ -16,11 +17,12 @@ export class SaveFile {
         });
     }
 
-    async execute({ file, bucket, key }: ISaveFile): Promise<boolean> {
+    async execute({ file, bucket, key, contentType }: ISaveFile): Promise<boolean> {
         try {
             const command = new PutObjectCommand({
                 Bucket: bucket,
                 Key: key,
+                ContentType: contentType,
                 Body: file
             });
 
