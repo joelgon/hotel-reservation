@@ -1,28 +1,29 @@
 import { Logger } from "pino";
 import { Big } from 'big.js'
 import { PreconditionFailed } from 'http-errors';
-import { Transaction } from "../../common/decorator/transaction.decorator";
-import { ICustomerBalanceRepository } from "../../domain/repositories/customer-balance.repository";
-import { IExtractRepository } from "../../domain/repositories/extract.repository";
 import { ClientSession } from "mongoose";
-import { ILockItemRepository } from "../../domain/repositories/lock-item.repository";
-import { customerBalanceEntity } from "../../domain/entities/customer-balance.entity";
+import { CustomerBalanceRepository } from "../repositories/customer-balance.repository";
+import { ExtractRepository } from "../repositories/extract.repository";
+import { LockItemRepository } from "../repositories/lock-item.repository";
+import { logger } from "../utils/logger";
+import { Transaction } from "../common/decorator/transaction.decorator";
+import { CustomerBalance } from '../model/customer-balance.model';
 
-export class DepositUseCase {
+export class DepositService {
     private readonly logger: Logger;
-    private readonly customerBalanceRepository: ICustomerBalanceRepository;
-    private readonly extractRepository: IExtractRepository;
-    private readonly lockItemRepository: ILockItemRepository
+    private readonly customerBalanceRepository: CustomerBalanceRepository;
+    private readonly extractRepository: ExtractRepository;
+    private readonly lockItemRepository: LockItemRepository;
 
-    constructor(logger: Logger, customerBalanceRepository: ICustomerBalanceRepository, extractRepository: IExtractRepository, lockItemRepository: ILockItemRepository) {
+    constructor() {
         this.logger = logger;
-        this.customerBalanceRepository = customerBalanceRepository;
-        this.extractRepository = extractRepository;
-        this.lockItemRepository = lockItemRepository;
+        this.customerBalanceRepository = new CustomerBalanceRepository();
+        this.extractRepository = new ExtractRepository();
+        this.lockItemRepository = new LockItemRepository();
     }
 
     @Transaction()
-    async execute(oldCustomerBalance: customerBalanceEntity, value: number, session?: ClientSession) {
+    async execute(oldCustomerBalance: CustomerBalance, value: number, session?: ClientSession) {
         try {
             this.logger.info({ value, oldCustomerBalance }, 'Deposit Strat');
 
