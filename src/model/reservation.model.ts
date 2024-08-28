@@ -1,6 +1,7 @@
-import { model, Schema } from "mongoose";
+import { InferSchemaType, model, Schema } from "mongoose";
 
-export const reservationSchme = new Schema({
+export const reservationSchema = new Schema({
+    _id: { type: String, required: true },
     customerId: { type: String, required: true, ref: 'customer' },
     hotelId: { type: String, required: true, index: true, ref: 'hotel' },
     roomId: { type: String, required: true, ref: 'room' },
@@ -11,4 +12,6 @@ export const reservationSchme = new Schema({
     deletedAt: { type: Date, default: null }
 });
 
-export const ReservationModel = model('reservation', reservationSchme)
+export type Reservation = InferSchemaType<typeof reservationSchema>;
+
+export const ReservationModel = model('reservation', reservationSchema)
