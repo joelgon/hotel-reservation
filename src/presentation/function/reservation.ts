@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
-import { RservationRequestDto } from "../dtos/reservation-request.dto";
+import { ReservationDto } from "../dtos/reservation.dto";
 import { authMiddleware } from "../../application/middleware/auth.middleware";
 import { ReservationUseCase } from "../../application/use-case/reservation.use-case";
 import { ReservationRepository } from "../../infra/database/repositories/reservation.repository";
@@ -12,7 +12,7 @@ import { CustomerBalanceRepository } from "../../infra/database/repositories/cus
 import { ExtractRepository } from "../../infra/database/repositories/extract.repository";
 
 async function reservationRequest (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
-  const body = JSON.parse(event.body ?? '{}') as RservationRequestDto;
+  const body = JSON.parse(event.body ?? '{}') as ReservationDto;
     const customer = event.requestContext.authorizer as customerBalanceEntity;
 
     const reservationRepository = new ReservationRepository();
@@ -40,4 +40,4 @@ async function reservationRequest (event: APIGatewayProxyEvent, context: Context
       };
 }
 
-export const handler = authMiddleware(reservationRequest, { bodyDto: RservationRequestDto });
+export const handler = authMiddleware(reservationRequest, { bodyDto: ReservationDto });

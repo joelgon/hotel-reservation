@@ -1,6 +1,6 @@
 import { Context, SQSEvent } from "aws-lambda";
 import { sqsMiddleware } from "../../application/middleware/sqs.middleware";
-import { ReservationDto } from "../dtos/reservation.dto";
+import { ReservationDto } from "../dtos/proof-payment.dto";
 // import { ReservationUseCase } from "../../application/use-case/reservation.use-case";
 import { logger } from "../../infra/logger";
 

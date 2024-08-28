@@ -1,10 +1,16 @@
 import { Transform } from "class-transformer";
-import { IsISO8601 } from "class-validator";
 import { IsObjectId } from "../../common/decorator/object-id.decorator";
+import { IsISO8601 } from "class-validator";
 
-export class RservationRequestDto {
+export class ReservationDto {
     @IsObjectId()
     hotelId: string;
+
+    @IsObjectId()
+    customerId: string;
+
+    @IsObjectId()
+    reservationId: string;
 
     @Transform(({ value }) => {
         const [day] = value.split(/T/);
