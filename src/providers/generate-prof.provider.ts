@@ -12,7 +12,7 @@ export class GenerateProofProvider {
 
     async execute({ name, totalValue, checkIn, checkOut, days, dailyValue }: IProofPayment): Promise<Uint8Array> {
         const pdfDoc = await PDFDocument.create();
-        const page = pdfDoc.addPage([600, 400]);
+        const page = pdfDoc.addPage([595.28, 841.89]);
 
         const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
         const { width, height } = page.getSize();
