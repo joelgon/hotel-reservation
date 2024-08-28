@@ -1,13 +1,12 @@
 import { Logger } from "pino";
 import { PreconditionFailed } from 'http-errors';
 import { Big } from 'big.js'
+import { ClientSession } from "mongoose";
 import { IReservationRepository, IReservationRequest } from "../../domain/repositories/reservation.repository";
 import { IRoomRepository } from "../../domain/repositories/room.repository";
 import { ISendMessaging } from "../../domain/messaging";
 import { Transaction } from "../../common/decorator/transaction.decorator";
-import { ClientSession } from "mongoose";
-import { IReservationMessaging } from "../../domain/messaging/reservation.messaging";
-import { CREATE_RESERVATION } from "../../common/constant/messaging.constant";
+import { IProofPaymentMessaging } from "../../domain/messaging/proof-payment.messaging";
 import { ILockItemRepository } from "../../domain/repositories/lock-item.repository";
 import { ICustomerBalanceRepository } from "../../domain/repositories/customer-balance.repository";
 import { IExtractRepository } from "../../domain/repositories/extract.repository";

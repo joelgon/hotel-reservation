@@ -1,4 +1,4 @@
-export interface IReservationMessaging {
+export interface IProofPaymentMessaging {
     hotelId: string;
     customerId: string;
     checkIn: Date;
