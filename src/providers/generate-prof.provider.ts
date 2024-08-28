@@ -8,6 +8,7 @@ interface IProofPayment {
     days: number;
     dailyValue: number;
 }
+
 export class GenerateProofProvider {
 
     async execute({ name, totalValue, checkIn, checkOut, days, dailyValue }: IProofPayment): Promise<Uint8Array> {

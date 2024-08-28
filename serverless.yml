@@ -97,6 +97,13 @@ functions:
           path: /reservation
           method: post
 
+  get-proof:
+    handler: src/function/get-proof.handler
+    events:
+      - http:
+          path: /get-proof/{reservationId}
+          method: get
+
   proof-payment:
     handler: src/function/proof-payment.handler
     events:
