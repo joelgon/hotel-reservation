@@ -21,8 +21,6 @@ provider:
         - sqs:GetQueueAttributes
         - sqs:SendMessage
       Resource:
-        - arn:aws:sqs:us-east-1:000000000000:create_reservation.fifo
-        - arn:aws:sqs:us-east-1:000000000000:create_reservation_dlq.fifo
         - arn:aws:sqs:us-east-1:000000000000:generate_proof.fifo
         - arn:aws:sqs:us-east-1:000000000000:generate_proof_dlq.fifo
 
@@ -98,3 +96,10 @@ functions:
       - http:
           path: /reservation
           method: post
+
+  proof-payment:
+    handler: src/presentation/function/proof-payment.handler
+    events:
+      - sqs: 
+          arn: arn:aws:sqs:us-east-1:000000000000:generate_proof.fifo
+          batchSize: 1
