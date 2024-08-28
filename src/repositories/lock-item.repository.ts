@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
-import { LockItemModel } from "../model/lock-item.model";
+import { LockItem, LockItemModel } from "../model/lock-item.model";
 import { logger } from "../utils/logger";
 
 export class LockItemRepository {
-    async create(_id: string) {
+    async create(_id: string): Promise<LockItem | undefined> {
         const lockItemModel = new LockItemModel({ _id: new Types.ObjectId(_id) });
 
         try {

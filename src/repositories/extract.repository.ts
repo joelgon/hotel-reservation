@@ -1,8 +1,8 @@
 import { ClientSession } from "mongoose";
-import { ExtractModel } from "../model/extract.model";
+import { Extract, ExtractModel } from "../model/extract.model";
 
 export class ExtractRepository {
-    async create(extract, session?: ClientSession) {
+    async create(extract:  {customerId: string; description: string; value: number; }, session?: ClientSession): Promise<Extract> {
         const extractModel = new ExtractModel(extract);
         return (await extractModel.save({ session })).toObject();
     }
