@@ -1,6 +1,6 @@
 import { Logger } from "pino";
 import { PreconditionFailed } from 'http-errors'
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 
 import { CustomerRepository } from "../repositories/customer.repository";
 import { SaveFileProvider } from "../providers/save-file.provider";
@@ -26,6 +26,8 @@ export class ProofPaymentService {
     }
 
     async execute(proofPaymentMessaging: ProofPaymentDto) {
+        this.logger.info({ proofPaymentMessaging }, 'Start generate proof');
+
         const customer = await this.customerRepository.findById(proofPaymentMessaging.customerId);
         if (!customer) throw new PreconditionFailed();
 
@@ -46,5 +48,7 @@ export class ProofPaymentService {
         });
 
         if (!isSuccess) throw new PreconditionFailed();
+
+        this.logger.info({ proofPaymentMessaging }, 'End generate proof');
     }
 }

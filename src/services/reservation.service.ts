@@ -2,7 +2,7 @@ import { Logger } from "pino";
 import { PreconditionFailed } from 'http-errors';
 import { Big } from 'big.js'
 import { ClientSession } from "mongoose";
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { ReservationRepository } from "../repositories/reservation.repository";
 import { RoomRepository } from "../repositories/room.repository";
 import { LockItemRepository } from "../repositories/lock-item.repository";
@@ -36,24 +36,26 @@ export class ReservationService {
     }
 
     @Transaction()
-    async execute(oldCustomerBalance: CustomerBalance, reservationRequest: ReservationDto, session?: ClientSession) {
+    async execute(oldCustomerBalance: CustomerBalance, reservationDto: ReservationDto, session?: ClientSession) {
         try {
+            this.logger.info({ reservationDto }, 'Start reservation');
+
             await Promise.all([
-                this.lockItemRepository.create(reservationRequest.hotelId),
+                this.lockItemRepository.create(reservationDto.hotelId),
                 this.lockItemRepository.create(oldCustomerBalance._id.toString())
             ]);
 
-            const conflictRoomIds = await this.reservationRepository.conflictReservations(reservationRequest);
+            const conflictRoomIds = await this.reservationRepository.conflictReservations(reservationDto);
 
             const [customerBalance, room] = await Promise.all([
                 this.customerBalanceRepository.findOne(oldCustomerBalance.customerId.toString()),
-                this.roomRepository.findFreeRomm({ hotelId: reservationRequest.hotelId, _ids: conflictRoomIds }),
+                this.roomRepository.findFreeRomm({ hotelId: reservationDto.hotelId, _ids: conflictRoomIds }),
             ])
 
             if (!customerBalance) throw new PreconditionFailed('customer balance not found');
             if (!room) throw new PreconditionFailed('The hotel does not have rooms available for these dates');
 
-            const diffDays = dayjs(reservationRequest.checkOut).diff(reservationRequest.checkIn, 'days');
+            const diffDays = dayjs(reservationDto.checkOut).diff(reservationDto.checkIn, 'days');
             const balance = new Big(customerBalance.value);
             const dailyValue = new Big(room.dailyValue);
             const totalValue = dailyValue.times(diffDays);
@@ -66,7 +68,7 @@ export class ReservationService {
                 this.reservationRepository.create({
                     customerId: customerBalance.customerId.toString(),
                     roomId: room._id.toString(),
-                    ...reservationRequest,
+                    ...reservationDto,
                 }, session),
 
                 this.extractRepository.create({ customerId: customerBalance.customerId?.toString(), description: 'Reserva realizada', value: totalValue.toNumber() }, session),
@@ -86,19 +88,22 @@ export class ReservationService {
                     totalValue: totalValue.toNumber(),
                     dailyValue: dailyValue.toNumber(),
                     days: diffDays,
-                    checkIn: reservationRequest.checkIn,
-                    checkOut: reservationRequest.checkOut,
+                    checkIn: reservationDto.checkIn,
+                    checkOut: reservationDto.checkOut,
                 }
             });
     
             if (!isSuccess) throw new PreconditionFailed('Failed to send message');
 
+            this.logger.info({}, 'Succes create reservation')
+
             return reservation;
         } catch (error) {
+            this.logger.error({ error }, 'Fail to create reservation')
             throw error;
         } finally {
             await Promise.all([
-                this.lockItemRepository.delete(reservationRequest.hotelId),
+                this.lockItemRepository.delete(reservationDto.hotelId),
                 this.lockItemRepository.delete(oldCustomerBalance._id.toString()),
             ]);
         }
