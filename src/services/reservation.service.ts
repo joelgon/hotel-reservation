@@ -8,8 +8,8 @@ import { RoomRepository } from "../repositories/room.repository";
 import { LockItemRepository } from "../repositories/lock-item.repository";
 import { CustomerBalanceRepository } from "../repositories/customer-balance.repository";
 import { ExtractRepository } from "../repositories/extract.repository";
-import { SendMessaging } from "../utils/messaging/send-messaging";
-import { logger } from "../utils/logger";
+import { SendMessagingProvider } from "../providers/send-messaging.provider";
+import { logger } from "../utils/logger.util";
 import { Transaction } from "../common/decorator/transaction.decorator";
 import { CustomerBalance } from "../model/customer-balance.model";
 import { ReservationDto } from "../dtos/reservation.dto";
@@ -21,7 +21,7 @@ export class ReservationService {
     private readonly lockItemRepository: LockItemRepository;
     private readonly customerBalanceRepository: CustomerBalanceRepository;
     private readonly extractRepository: ExtractRepository;
-    private readonly sendMessaging: SendMessaging;
+    private readonly sendMessagingProvider: SendMessagingProvider;
 
     constructor() {
         this.logger = logger;
@@ -30,7 +30,7 @@ export class ReservationService {
         this.lockItemRepository = new LockItemRepository();
         this.customerBalanceRepository = new CustomerBalanceRepository();
         this.extractRepository = new ExtractRepository();
-        this.sendMessaging = new SendMessaging();
+        this.sendMessagingProvider = new SendMessagingProvider();
     }
 
     @Transaction()

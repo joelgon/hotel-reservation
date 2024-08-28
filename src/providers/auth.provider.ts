@@ -1,7 +1,7 @@
 import * as jsonWebToken from 'jsonwebtoken';
 import { Unauthorized } from 'http-errors';
 
-export class JsonWebToken {
+export class AuthProvider {
     private readonly secret = process.env.JWT_SECRET ?? 'default_secret'
 
     sign(customerId: string): string {

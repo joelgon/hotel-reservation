@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { connectToDatabase } from "../config/dbConfig";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { MiddlewareObj } from "@middy/core";
-import { logger } from "../utils/logger";
+import { logger } from "../utils/logger.util";
 
 export const dataBaseConnectionMiddleware = (): MiddlewareObj<APIGatewayProxyEvent> => {
     return {

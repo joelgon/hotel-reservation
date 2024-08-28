@@ -1,5 +1,5 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { logger } from "../logger";
+import { logger } from "../utils/logger.util";
 
 interface ISaveFile {
     bucket: string;
@@ -8,7 +8,7 @@ interface ISaveFile {
     file: string | Uint8Array | Buffer
 }
 
-export class SaveFile {
+export class SaveFileProvider {
     private readonly client: S3Client;
 
     constructor() {

@@ -1,7 +1,7 @@
 import { MiddlewareObj } from '@middy/core';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { Unauthorized } from 'http-errors'
-import { JsonWebToken } from '../utils/jwt';
+import { AuthProvider } from '../providers/auth.provider';
 import { CustomerBalanceRepository } from '../repositories/customer-balance.repository';
 
 export const authenticateUserMiddleware = (): MiddlewareObj<APIGatewayProxyEvent> => {
@@ -11,8 +11,8 @@ export const authenticateUserMiddleware = (): MiddlewareObj<APIGatewayProxyEvent
 
             if (!token) throw new Unauthorized();
 
-            const jsonWebToken = new JsonWebToken();
-            const decode = jsonWebToken.verify(token);
+            const authProvider = new AuthProvider();
+            const decode = authProvider.verify(token);
 
             const customerBalanceRepository = new CustomerBalanceRepository();
             const customerBalance = await customerBalanceRepository.findOne(decode.customerId);

@@ -1,6 +1,6 @@
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 import { NotFound } from 'http-errors';
-import { logger } from '../logger';
+import { logger } from '../utils/logger.util';
 
 interface ISendMessage<T extends object> {
     body: T;
@@ -9,7 +9,7 @@ interface ISendMessage<T extends object> {
     queueName: string;
 }
 
-export class SendMessaging {
+export class SendMessagingProvider {
     private readonly client: SQSClient;
 
     constructor() {

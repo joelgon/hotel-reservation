@@ -5,7 +5,7 @@ import { ClientSession } from "mongoose";
 import { CustomerBalanceRepository } from "../repositories/customer-balance.repository";
 import { ExtractRepository } from "../repositories/extract.repository";
 import { LockItemRepository } from "../repositories/lock-item.repository";
-import { logger } from "../utils/logger";
+import { logger } from "../utils/logger.util";
 import { Transaction } from "../common/decorator/transaction.decorator";
 import { CustomerBalance } from '../model/customer-balance.model';
 

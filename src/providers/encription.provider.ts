@@ -1,6 +1,6 @@
 import { genSalt, hash } from "bcryptjs";
 
-export class Encription {
+export class EncriptionProvider {
     async execute(password: string): Promise<string> {
         const saltRounds = 10;
 

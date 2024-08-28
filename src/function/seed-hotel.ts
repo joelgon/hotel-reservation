@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.util';
 import { HotelModel } from '../model/hotel.model';
 import { RoomModel } from '../model/room.model';
 import { noAuthMiddleware } from '../middleware/no-auth.middleware';

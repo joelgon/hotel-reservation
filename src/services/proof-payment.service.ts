@@ -4,8 +4,8 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import * as dayjs from 'dayjs';
 
 import { CustomerRepository } from "../repositories/customer.repository";
-import { SaveFile } from "../utils/cloud-storage/save-file";
-import { logger } from "../utils/logger";
+import { SaveFileProvider } from "../providers/save-file.provider";
+import { logger } from "../utils/logger.util";
 import { ProofPaymentDto } from "../dtos/proof-payment.dto";
 import { PROOF_PAYMENT_BUCKET } from "../common/constant/cloud-storage.constant";
 
@@ -15,11 +15,12 @@ dayjs.locale('pt-br');
 export class ProofPaymentService {
     private readonly logger: Logger;
     private readonly customerRepository: CustomerRepository;
-    private readonly saveFile: SaveFile;
+    private readonly saveFileProvider: SaveFileProvider;
 
     constructor() {
         this.logger = logger;
         this.customerRepository = new CustomerRepository();
+        this.saveFileProvider = new SaveFileProvider();
     }
 
     async execute(proofPaymentMessaging: ProofPaymentDto) {
@@ -125,7 +126,7 @@ export class ProofPaymentService {
 
         const pdfBytes = await pdfDoc.save();
 
-        const isSuccess = await this.saveFile.execute({ 
+        const isSuccess = await this.saveFileProvider.execute({ 
             file: pdfBytes,
             bucket: PROOF_PAYMENT_BUCKET,
             contentType: 'application/pdf',
