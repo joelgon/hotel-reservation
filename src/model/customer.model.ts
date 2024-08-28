@@ -1,7 +1,6 @@
 import { InferSchemaType, model, Schema } from "mongoose";
 
 export const customerSchema = new Schema({
-    _id: { type: String, required: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -10,6 +9,6 @@ export const customerSchema = new Schema({
     deletedAt: { type: Date, default: null }
 });
 
-export type Customer = InferSchemaType<typeof customerSchema>;
+export type Customer = InferSchemaType<typeof customerSchema> & { _id: string; };
 
 export const CustomerModel = model('customer', customerSchema);
