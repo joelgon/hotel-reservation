@@ -197,4 +197,106 @@ describe('ReservationService', () => {
 
     expect(logger.error).toHaveBeenCalledWith({ error }, 'Fail to create reservation');
   });
+
+  it('should fail when trying to update balance', async () => {
+    const oldCustomerBalance = { _id: '1', customerId: '123', value: 2000 };
+    const reservationDto = {
+      hotelId: 'hotel123',
+      checkIn: '2024-01-01',
+      checkOut: '2024-01-05',
+    };
+    const session = {} as ClientSession;
+
+    lockItemRepository.create.mockResolvedValue(<any>true);
+    customerBalanceRepository.findOne.mockResolvedValue(<any>{ customerId: '123', value: 2000 });
+    roomRepository.findFreeRomm.mockResolvedValue(<any>{ _id: 'room123', hotelId: 'hotel123' });
+    hotelRepository.findById.mockResolvedValue(<any>{ _id: 'hotel123', dailyValue: 500 });
+    reservationRepository.conflictReservations.mockResolvedValue([]);
+    reservationRepository.create.mockResolvedValue(<any>{ _id: 'reservation123', customerId: '123', roomId: 'room123' });
+    extractRepository.create.mockResolvedValue(<any>true);
+    customerBalanceRepository.update.mockResolvedValue(false);
+
+    await expect(reservationService.execute(oldCustomerBalance, <any>reservationDto, session)).rejects.toThrow(PreconditionFailed);
+
+    expect(lockItemRepository.create).toHaveBeenCalledWith('hotel123');
+    expect(lockItemRepository.create).toHaveBeenCalledWith('1');
+    expect(customerBalanceRepository.findOne).toHaveBeenCalledWith('123');
+    expect(roomRepository.findFreeRomm).toHaveBeenCalledWith({ hotelId: 'hotel123', _ids: [] });
+    expect(hotelRepository.findById).toHaveBeenCalledWith('hotel123');
+    expect(reservationRepository.create).toHaveBeenCalledWith(
+      {
+        customerId: '123',
+        roomId: 'room123',
+        ...reservationDto,
+      },
+      session
+    );
+    expect(extractRepository.create).toHaveBeenCalledWith(
+      { customerId: '123', description: 'Reserva realizada', value: 2000 },
+      session
+    );
+    expect(customerBalanceRepository.update).toHaveBeenCalledWith(
+      { customerId: '123', value: 0 },
+      session
+    );
+    expect(sendMessagingProvider.execute).not.toHaveBeenCalled();
+  });
+
+  it('should fail when trying to send a message', async () => {
+    const oldCustomerBalance = { _id: '1', customerId: '123', value: 2000 };
+    const reservationDto = {
+      hotelId: 'hotel123',
+      checkIn: '2024-01-01',
+      checkOut: '2024-01-05',
+    };
+    const session = {} as ClientSession;
+
+    lockItemRepository.create.mockResolvedValue(<any>true);
+    customerBalanceRepository.findOne.mockResolvedValue(<any>{ customerId: '123', value: 2000 });
+    roomRepository.findFreeRomm.mockResolvedValue(<any>{ _id: 'room123', hotelId: 'hotel123' });
+    hotelRepository.findById.mockResolvedValue(<any>{ _id: 'hotel123', dailyValue: 500 });
+    reservationRepository.conflictReservations.mockResolvedValue([]);
+    reservationRepository.create.mockResolvedValue(<any>{ _id: 'reservation123', customerId: '123', roomId: 'room123' });
+    extractRepository.create.mockResolvedValue(<any>true);
+    customerBalanceRepository.update.mockResolvedValue(true);
+    sendMessagingProvider.execute.mockResolvedValue(false);
+
+    await expect(reservationService.execute(oldCustomerBalance, <any>reservationDto, session)).rejects.toThrow(PreconditionFailed);
+
+    expect(lockItemRepository.create).toHaveBeenCalledWith('hotel123');
+    expect(lockItemRepository.create).toHaveBeenCalledWith('1');
+    expect(customerBalanceRepository.findOne).toHaveBeenCalledWith('123');
+    expect(roomRepository.findFreeRomm).toHaveBeenCalledWith({ hotelId: 'hotel123', _ids: [] });
+    expect(hotelRepository.findById).toHaveBeenCalledWith('hotel123');
+    expect(reservationRepository.create).toHaveBeenCalledWith(
+      {
+        customerId: '123',
+        roomId: 'room123',
+        ...reservationDto,
+      },
+      session
+    );
+    expect(extractRepository.create).toHaveBeenCalledWith(
+      { customerId: '123', description: 'Reserva realizada', value: 2000 },
+      session
+    );
+    expect(customerBalanceRepository.update).toHaveBeenCalledWith(
+      { customerId: '123', value: 0 },
+      session
+    );
+    expect(sendMessagingProvider.execute).toHaveBeenCalledWith({
+      queueName: GENERATE_PROOF_QUEUE_NAME,
+      deduplicationId: 'reservation123',
+      groupId: 'hotel123',
+      body: {
+        customerId: '123',
+        reservationId: 'reservation123',
+        totalValue: 2000,
+        dailyValue: 500,
+        days: 4,
+        checkIn: '2024-01-01',
+        checkOut: '2024-01-05',
+      },
+    });
+  });
 });

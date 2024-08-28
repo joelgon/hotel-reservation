@@ -88,7 +88,7 @@ export class ReservationService {
 
       if (!succesUpdate) throw new PreconditionFailed(`CustomerBalance not found`);
 
-      const isSuccess = this.sendMessagingProvider.execute<ProofPaymentDto>({
+      const isSuccess = await this.sendMessagingProvider.execute<ProofPaymentDto>({
         queueName: GENERATE_PROOF_QUEUE_NAME,
         deduplicationId: reservation._id.toString(),
         groupId: room.hotelId,
