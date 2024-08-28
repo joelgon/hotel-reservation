@@ -1,8 +1,8 @@
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 import { NotFound } from 'http-errors';
 
-import { logger } from '../common/utils/logger.util';
 import { SendMessagingProvider } from './send-messaging.provider';
+import { logger } from '../common/utils/logger.util';
 
 jest.mock('@aws-sdk/client-sqs');
 jest.mock('../common/utils/logger.util');

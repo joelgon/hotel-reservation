@@ -1,11 +1,12 @@
 import { PreconditionFailed } from 'http-errors';
-import { CustomerRepository } from '../repositories/customer.repository';
-import { CustomerBalanceRepository } from '../repositories/customer-balance.repository';
-import { EncriptionProvider } from '../providers/encription.provider';
-import { AuthProvider } from '../providers/auth.provider';
-import { SignUpDto } from '../dtos/sign-up.dto';
-import { logger } from '../common/utils/logger.util';
+
 import { SignUpService } from './sign-up.service';
+import { logger } from '../common/utils/logger.util';
+import { SignUpDto } from '../dtos/sign-up.dto';
+import { AuthProvider } from '../providers/auth.provider';
+import { EncriptionProvider } from '../providers/encription.provider';
+import { CustomerBalanceRepository } from '../repositories/customer-balance.repository';
+import { CustomerRepository } from '../repositories/customer.repository';
 
 jest.mock('../repositories/customer.repository');
 jest.mock('../repositories/customer-balance.repository');

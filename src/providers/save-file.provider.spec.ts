@@ -1,6 +1,7 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { logger } from '../common/utils/logger.util';
+
 import { SaveFileProvider } from './save-file.provider';
+import { logger } from '../common/utils/logger.util';
 
 jest.mock('@aws-sdk/client-s3');
 jest.mock('../common/utils/logger.util');

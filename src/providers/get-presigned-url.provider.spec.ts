@@ -2,8 +2,8 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { FailedDependency } from 'http-errors';
 
-import { logger } from '../common/utils/logger.util';
 import { GetPresignedUrlProvider } from './get-presigned-url.provider';
+import { logger } from '../common/utils/logger.util';
 
 jest.mock('@aws-sdk/client-s3');
 jest.mock('@aws-sdk/s3-request-presigner');
@@ -28,11 +28,7 @@ describe('GetPresignedUrlProvider', () => {
     expect(S3Client).toHaveBeenCalledWith({
       endpoint: process.env.S3_ENDPOINT,
     });
-    expect(getSignedUrl).toHaveBeenCalledWith(
-      expect.any(S3Client),
-      expect.any(GetObjectCommand),
-      { expiresIn: 60 }
-    );
+    expect(getSignedUrl).toHaveBeenCalledWith(expect.any(S3Client), expect.any(GetObjectCommand), { expiresIn: 60 });
     expect(result).toBe(mockUrl);
   });
 
@@ -43,13 +39,8 @@ describe('GetPresignedUrlProvider', () => {
 
     (getSignedUrl as jest.Mock).mockRejectedValue(error);
 
-    await expect(
-      getPresignedUrlProvider.execute({ bucket, key })
-    ).rejects.toThrow(FailedDependency);
+    await expect(getPresignedUrlProvider.execute({ bucket, key })).rejects.toThrow(FailedDependency);
 
-    expect(logger.error).toHaveBeenCalledWith(
-      { error },
-      'Fail to generate signed URL'
-    );
+    expect(logger.error).toHaveBeenCalledWith({ error }, 'Fail to generate signed URL');
   });
 });

@@ -3,11 +3,11 @@ import { PreconditionFailed } from 'http-errors';
 import { Logger } from 'pino';
 
 import { PROOF_PAYMENT_BUCKET } from '../common/constant/cloud-storage.constant';
+import { logger } from '../common/utils/logger.util';
 import { ProofPaymentDto } from '../dtos/proof-payment.dto';
 import { GenerateProofProvider } from '../providers/generate-prof.provider';
 import { SaveFileProvider } from '../providers/save-file.provider';
 import { CustomerRepository } from '../repositories/customer.repository';
-import { logger } from '../common/utils/logger.util';
 
 import 'dayjs/locale/pt-br';
 dayjs.locale('pt-br');

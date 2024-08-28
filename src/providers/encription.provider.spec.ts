@@ -1,4 +1,5 @@
 import { genSalt, hash } from 'bcryptjs';
+
 import { EncriptionProvider } from './encription.provider';
 
 jest.mock('bcryptjs');

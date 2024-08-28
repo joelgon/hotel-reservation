@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
 import { PreconditionFailed } from 'http-errors';
-import { CustomerRepository } from '../repositories/customer.repository';
-import { SaveFileProvider } from '../providers/save-file.provider';
-import { GenerateProofProvider } from '../providers/generate-prof.provider';
-import { ProofPaymentDto } from '../dtos/proof-payment.dto';
-import { logger } from '../common/utils/logger.util';
-import { PROOF_PAYMENT_BUCKET } from '../common/constant/cloud-storage.constant';
+
 import { ProofPaymentService } from './proof-payment.service';
+import { PROOF_PAYMENT_BUCKET } from '../common/constant/cloud-storage.constant';
+import { logger } from '../common/utils/logger.util';
+import { ProofPaymentDto } from '../dtos/proof-payment.dto';
+import { GenerateProofProvider } from '../providers/generate-prof.provider';
+import { SaveFileProvider } from '../providers/save-file.provider';
+import { CustomerRepository } from '../repositories/customer.repository';
 
 jest.mock('../repositories/customer.repository');
 jest.mock('../providers/save-file.provider');
@@ -61,14 +62,8 @@ describe('ProofPaymentService', () => {
       contentType: 'application/pdf',
       key: '123/456.pdf',
     });
-    expect(logger.info).toHaveBeenCalledWith(
-      { proofPaymentMessaging },
-      'Start generate proof'
-    );
-    expect(logger.info).toHaveBeenCalledWith(
-      { proofPaymentMessaging },
-      'End generate proof'
-    );
+    expect(logger.info).toHaveBeenCalledWith({ proofPaymentMessaging }, 'Start generate proof');
+    expect(logger.info).toHaveBeenCalledWith({ proofPaymentMessaging }, 'End generate proof');
   });
 
   it('should throw PreconditionFailed if customer is not found', async () => {
@@ -86,10 +81,7 @@ describe('ProofPaymentService', () => {
 
     await expect(proofPaymentService.execute(proofPaymentMessaging)).rejects.toThrow(PreconditionFailed);
 
-    expect(logger.info).toHaveBeenCalledWith(
-      { proofPaymentMessaging },
-      'Start generate proof'
-    );
+    expect(logger.info).toHaveBeenCalledWith({ proofPaymentMessaging }, 'Start generate proof');
     expect(logger.error).not.toHaveBeenCalled();
   });
 
@@ -119,10 +111,7 @@ describe('ProofPaymentService', () => {
       contentType: 'application/pdf',
       key: '123/456.pdf',
     });
-    expect(logger.info).toHaveBeenCalledWith(
-      { proofPaymentMessaging },
-      'Start generate proof'
-    );
+    expect(logger.info).toHaveBeenCalledWith({ proofPaymentMessaging }, 'Start generate proof');
     expect(logger.error).not.toHaveBeenCalled();
   });
 });

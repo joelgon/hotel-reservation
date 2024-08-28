@@ -1,4 +1,5 @@
 import { compare } from 'bcryptjs';
+
 import { CompareHashProvider } from './compare-hash.provider';
 
 jest.mock('bcryptjs');

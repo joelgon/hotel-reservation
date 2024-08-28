@@ -1,15 +1,16 @@
 import { PreconditionFailed } from 'http-errors';
 import { ClientSession } from 'mongoose';
+
+import { ReservationService } from './reservation.service';
+import { GENERATE_PROOF_QUEUE_NAME } from '../common/constant/messaging.constant';
+import { logger } from '../common/utils/logger.util';
+import { SendMessagingProvider } from '../providers/send-messaging.provider';
 import { CustomerBalanceRepository } from '../repositories/customer-balance.repository';
 import { ExtractRepository } from '../repositories/extract.repository';
+import { HotelRepository } from '../repositories/hotel.repository';
 import { LockItemRepository } from '../repositories/lock-item.repository';
 import { ReservationRepository } from '../repositories/reservation.repository';
 import { RoomRepository } from '../repositories/room.repository';
-import { HotelRepository } from '../repositories/hotel.repository';
-import { SendMessagingProvider } from '../providers/send-messaging.provider';
-import { logger } from '../common/utils/logger.util';
-import { ReservationService } from './reservation.service';
-import { GENERATE_PROOF_QUEUE_NAME } from '../common/constant/messaging.constant';
 
 jest.mock('../repositories/customer-balance.repository');
 jest.mock('../repositories/extract.repository');
@@ -20,11 +21,11 @@ jest.mock('../repositories/hotel.repository');
 jest.mock('../providers/send-messaging.provider');
 jest.mock('../common/utils/logger.util');
 jest.mock('../common/decorator/transaction.decorator', () => ({
-  Transaction: () => (
-    ...args: [unknown, unknown, PropertyDescriptor]
-  ) => {
-    return args[2];
-  },
+  Transaction:
+    () =>
+    (...args: [unknown, unknown, PropertyDescriptor]) => {
+      return args[2];
+    },
 }));
 
 describe('ReservationService', () => {
@@ -82,14 +83,8 @@ describe('ReservationService', () => {
       },
       session
     );
-    expect(extractRepository.create).toHaveBeenCalledWith(
-      { customerId: '123', description: 'Reserva realizada', value: 2000 },
-      session
-    );
-    expect(customerBalanceRepository.update).toHaveBeenCalledWith(
-      { customerId: '123', value: 0 },
-      session
-    );
+    expect(extractRepository.create).toHaveBeenCalledWith({ customerId: '123', description: 'Reserva realizada', value: 2000 }, session);
+    expect(customerBalanceRepository.update).toHaveBeenCalledWith({ customerId: '123', value: 0 }, session);
     expect(sendMessagingProvider.execute).toHaveBeenCalledWith({
       queueName: GENERATE_PROOF_QUEUE_NAME,
       deduplicationId: 'reservation123',
@@ -231,14 +226,8 @@ describe('ReservationService', () => {
       },
       session
     );
-    expect(extractRepository.create).toHaveBeenCalledWith(
-      { customerId: '123', description: 'Reserva realizada', value: 2000 },
-      session
-    );
-    expect(customerBalanceRepository.update).toHaveBeenCalledWith(
-      { customerId: '123', value: 0 },
-      session
-    );
+    expect(extractRepository.create).toHaveBeenCalledWith({ customerId: '123', description: 'Reserva realizada', value: 2000 }, session);
+    expect(customerBalanceRepository.update).toHaveBeenCalledWith({ customerId: '123', value: 0 }, session);
     expect(sendMessagingProvider.execute).not.toHaveBeenCalled();
   });
 
@@ -276,14 +265,8 @@ describe('ReservationService', () => {
       },
       session
     );
-    expect(extractRepository.create).toHaveBeenCalledWith(
-      { customerId: '123', description: 'Reserva realizada', value: 2000 },
-      session
-    );
-    expect(customerBalanceRepository.update).toHaveBeenCalledWith(
-      { customerId: '123', value: 0 },
-      session
-    );
+    expect(extractRepository.create).toHaveBeenCalledWith({ customerId: '123', description: 'Reserva realizada', value: 2000 }, session);
+    expect(customerBalanceRepository.update).toHaveBeenCalledWith({ customerId: '123', value: 0 }, session);
     expect(sendMessagingProvider.execute).toHaveBeenCalledWith({
       queueName: GENERATE_PROOF_QUEUE_NAME,
       deduplicationId: 'reservation123',

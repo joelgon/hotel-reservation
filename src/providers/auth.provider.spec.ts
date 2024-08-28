@@ -1,9 +1,8 @@
 import { Unauthorized } from 'http-errors';
 import * as jsonWebToken from 'jsonwebtoken';
-import { Logger } from 'pino';
 
-import { logger } from '../common/utils/logger.util';
 import { AuthProvider } from './auth.provider';
+import { logger } from '../common/utils/logger.util';
 
 jest.mock('jsonwebtoken');
 jest.mock('../common/utils/logger.util');

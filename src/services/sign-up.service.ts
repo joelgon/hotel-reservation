@@ -1,12 +1,12 @@
 import { PreconditionFailed } from 'http-errors';
 import { Logger } from 'pino';
 
+import { logger } from '../common/utils/logger.util';
 import { SignUpDto } from '../dtos/sign-up.dto';
 import { AuthProvider } from '../providers/auth.provider';
 import { EncriptionProvider } from '../providers/encription.provider';
 import { CustomerBalanceRepository } from '../repositories/customer-balance.repository';
 import { CustomerRepository } from '../repositories/customer.repository';
-import { logger } from '../common/utils/logger.util';
 
 export class SignUpService {
   private readonly logger: Logger;

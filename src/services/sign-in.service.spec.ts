@@ -1,9 +1,10 @@
 import { PreconditionFailed } from 'http-errors';
-import { CustomerRepository } from '../repositories/customer.repository';
-import { CompareHashProvider } from '../providers/compare-hash.provider';
-import { AuthProvider } from '../providers/auth.provider';
-import { SignInDto } from '../dtos/sign-in.dto';
+
 import { SignInService } from './sign-in.service';
+import { SignInDto } from '../dtos/sign-in.dto';
+import { AuthProvider } from '../providers/auth.provider';
+import { CompareHashProvider } from '../providers/compare-hash.provider';
+import { CustomerRepository } from '../repositories/customer.repository';
 
 jest.mock('../repositories/customer.repository');
 jest.mock('../providers/compare-hash.provider');

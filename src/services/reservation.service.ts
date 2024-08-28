@@ -6,6 +6,7 @@ import { Logger } from 'pino';
 
 import { GENERATE_PROOF_QUEUE_NAME } from '../common/constant/messaging.constant';
 import { Transaction } from '../common/decorator/transaction.decorator';
+import { logger } from '../common/utils/logger.util';
 import { ProofPaymentDto } from '../dtos/proof-payment.dto';
 import { ReservationDto } from '../dtos/reservation.dto';
 import { CustomerBalance } from '../model/customer-balance.model';
@@ -16,7 +17,6 @@ import { HotelRepository } from '../repositories/hotel.repository';
 import { LockItemRepository } from '../repositories/lock-item.repository';
 import { ReservationRepository } from '../repositories/reservation.repository';
 import { RoomRepository } from '../repositories/room.repository';
-import { logger } from '../common/utils/logger.util';
 
 export class ReservationService {
   private readonly logger: Logger;
