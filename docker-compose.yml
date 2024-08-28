@@ -17,8 +17,6 @@ services:
       - AWS_SECRET_ACCESS_KEY=test
     volumes:
       - "./localstack:/var/lib/localstack"
-      - "./proof_payment.docx:/mnt/proof_payment.docx"
-      - "./scripts/localstack-setup.sh:/etc/localstack/init/ready.d/script.sh"
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - app_network

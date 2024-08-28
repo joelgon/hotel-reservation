@@ -77,7 +77,7 @@ functions:
           method: post
 
   sign-in:
-    handler: src/presentation/function/sign-in.handler
+    handler: src/function/sign-in.handler
     events:
       - http:
           path: /sign-in
