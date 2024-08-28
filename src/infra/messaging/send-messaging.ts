@@ -10,11 +10,14 @@ interface ISendMessage<T extends object> {
 }
 
 export class SendMessaging {
+    private readonly client: SQSClient;
+
+    constructor() {
+        this.client = new SQSClient();
+    }
 
     async execute<T extends object = any>({ body, deduplicationId, groupId, queueName }: ISendMessage<T>): Promise<Boolean> {
         try {
-            const client = new SQSClient();
-
             const command = new SendMessageCommand({
                 QueueUrl: `http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/${queueName}`,
                 MessageBody: JSON.stringify(body),
@@ -22,7 +25,7 @@ export class SendMessaging {
                 MessageGroupId: groupId,
             });
 
-            const result = await client.send(command);
+            const result = await this.client.send(command);
             if (!result?.MessageId) throw new NotFound('Failed to send message')
 
             logger.info({ body, queueName, messageId: result.MessageId, status: 'OK' })

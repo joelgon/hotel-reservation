@@ -1,0 +1,1 @@
+export const PROOF_PAYMENT_BUCKET = 'proof-payment';
