@@ -13,6 +13,8 @@ import { logger } from "../utils/logger.util";
 import { Transaction } from "../common/decorator/transaction.decorator";
 import { CustomerBalance } from "../model/customer-balance.model";
 import { ReservationDto } from "../dtos/reservation.dto";
+import { ProofPaymentDto } from "../dtos/proof-payment.dto";
+import { GENERATE_PROOF_QUEUE_NAME } from "../common/constant/messaging.constant";
 
 export class ReservationService {
     private readonly logger: Logger;
@@ -54,13 +56,11 @@ export class ReservationService {
             const diffDays = dayjs(reservationRequest.checkOut).diff(reservationRequest.checkIn, 'days');
             const balance = new Big(customerBalance.value);
             const dailyValue = new Big(room.dailyValue);
-            const totalDailys = dailyValue.times(diffDays);
+            const totalValue = dailyValue.times(diffDays);
 
-            this.logger.info({ diffDays, balance: customerBalance.value, dailyValue: room.dailyValue, totalDailys }, 'procure isso akiiiiiiiiiiiiii')
+            if (balance.lt(totalValue)) throw new PreconditionFailed('Insufficient balance');
 
-            if (balance.lt(totalDailys)) throw new PreconditionFailed('Insufficient balance');
-
-            const updateBalance = balance.sub(totalDailys).toNumber();
+            const updateBalance = balance.sub(totalValue).toNumber();
 
             const [reservation, , succesUpdate] = await Promise.all([
                 this.reservationRepository.create({
@@ -69,12 +69,29 @@ export class ReservationService {
                     ...reservationRequest,
                 }, session),
 
-                this.extractRepository.create({ customerId: customerBalance.customerId?.toString(), description: 'Reserva realizada', value: totalDailys.toNumber() }, session),
+                this.extractRepository.create({ customerId: customerBalance.customerId?.toString(), description: 'Reserva realizada', value: totalValue.toNumber() }, session),
 
                 this.customerBalanceRepository.update({ customerId: customerBalance.customerId?.toString(), value: updateBalance }, session)
             ]);
 
             if (!succesUpdate) throw new PreconditionFailed(`CustomerBalance not found`);
+
+            const isSuccess = this.sendMessagingProvider.execute<ProofPaymentDto>({
+                queueName: GENERATE_PROOF_QUEUE_NAME,
+                deduplicationId: reservation._id.toString(),
+                groupId: room.hotelId,
+                body: {
+                    customerId: customerBalance.customerId.toString(),
+                    reservationId: reservation._id.toString(),
+                    totalValue: totalValue.toNumber(),
+                    dailyValue: dailyValue.toNumber(),
+                    days: diffDays,
+                    checkIn: reservationRequest.checkIn,
+                    checkOut: reservationRequest.checkOut,
+                }
+            });
+    
+            if (!isSuccess) throw new PreconditionFailed('Failed to send message');
 
             return reservation;
         } catch (error) {
@@ -85,18 +102,5 @@ export class ReservationService {
                 this.lockItemRepository.delete(oldCustomerBalance._id.toString()),
             ]);
         }
-
-        // const isSuccess = this.sendMessaging.execute<IReservationMessaging>({
-        //     queueName: CREATE_RESERVATION,
-        //     deduplicationId: reservation._id.toString(),
-        //     groupId: room.hotelId,
-        //     body: {
-        //         reservationId: reservation._id.toString(),
-        //         customerId: _id.toString(),
-        //         ...reservationRequest
-        //     }
-        // });
-
-        // if (!isSuccess) throw new PreconditionFailed('Failed to send message');
     }
 }
