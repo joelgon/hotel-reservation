@@ -21,7 +21,55 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - app_network
-      
+
+  mongo1:
+    hostname: mongo1
+    container_name: localmongo1
+    image: mongo
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    restart: always
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--dbpath", "/data/db"]
+    volumes:
+      - ./volumes/mongo/data1/db:/data/db
+      - ./volumes/mongo/data1/configdb:/data/configdb
+    networks:
+      - app_network
+
+  mongo2:
+    hostname: mongo2
+    container_name: localmongo2
+    image: mongo
+    expose:
+      - 27017
+    ports:
+      - 27018:27017
+    restart: always
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--dbpath", "/data/db"]
+    volumes:
+      - ./volumes/mongo/data2/db:/data/db
+      - ./volumes/mongo/data2/configdb:/data/configdb
+    networks:
+      - app_network
+
+  mongo3:
+    hostname: mongo3
+    container_name: localmongo3
+    image: mongo
+    expose:
+      - 27017
+    ports:
+      - 27019:27017
+    restart: always
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--dbpath", "/data/db"]
+    volumes:
+      - ./volumes/mongo/data3/db:/data/db
+      - ./volumes/mongo/data3/configdb:/data/configdb
+    networks:
+      - app_network
+
   mongo-setup:
     container_name: mongo-setup
     image: mongo
@@ -43,12 +91,12 @@ services:
     ports:
       - 8081:8081
     environment:
-    - ME_CONFIG_MONGODB_URL=mongodb://root:example@mongo1:27017,mongo2:27017,mongo3:27017/?replicaSet=rs0&authSource=admin
-    - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-    - ME_CONFIG_MONGODB_ADMINPASSWORD=example
-    - ME_CONFIG_OPTIONS_EDITORTHEME=ambiance
-    - ME_CONFIG_BASICAUTH_USERNAME=mexpress
-    - ME_CONFIG_BASICAUTH_PASSWORD=mexpress
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/?replicaSet=rs0&authSource=admin
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+      - ME_CONFIG_OPTIONS_EDITORTHEME=ambiance
+      - ME_CONFIG_BASICAUTH_USERNAME=mexpress
+      - ME_CONFIG_BASICAUTH_PASSWORD=mexpress
     depends_on:
       - mongo1
       - mongo2
@@ -56,62 +104,6 @@ services:
     networks:
       - app_network
 
-  mongo1:
-    hostname: mongo1
-    container_name: localmongo1
-    image: mongo
-    expose:
-      - 27017
-    ports:
-      - 27017:27017
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
-    restart: always
-    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--dbpath", "/data/db"]
-    volumes:
-      - ./volumes/mongo/data1/db:/data/db
-      - ./volumes/mongo/data1/configdb:/data/configdb
-    networks:
-      - app_network
-
-  mongo2:
-    hostname: mongo2
-    container_name: localmongo2
-    image: mongo
-    expose:
-      - 27017
-    ports:
-      - 27018:27017
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
-    restart: always
-    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--dbpath", "/data/db"]
-    volumes:
-      - ./volumes/mongo/data2/db:/data/db
-      - ./volumes/mongo/data2/configdb:/data/configdb
-    networks:
-      - app_network
-
-  mongo3:
-    hostname: mongo3
-    container_name: localmongo3
-    image: mongo
-    expose:
-      - 27017
-    ports:
-      - 27019:27017
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
-    restart: always
-    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--dbpath", "/data/db",]
-    volumes:
-      - ./volumes/mongo/data3/db:/data/db
-      - ./volumes/mongo/data3/configdb:/data/configdb
-    networks:
-      - app_network
 
 networks:
   app_network:
