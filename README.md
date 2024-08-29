@@ -10,7 +10,6 @@ Este repositório contém o serviço de reserva de hotel, implementado utilizand
 - **Desconto de Saldo no Check-in**:
   Descontar o saldo apenas no momento do check-in não parecia uma abordagem adequada, pois isso poderia gerar uma desvantagem significativa para o hotel. Clientes poderiam fazer reservas e não comparecer ou pagar, causando prejuízos ao hotel.
 
-
 ## Requisitos Mínimos
 
 Para rodar este serviço localmente, você precisará garantir que os seguintes requisitos estejam atendidos:
@@ -63,38 +62,89 @@ Após garantir que todos os requisitos acima estão atendidos, siga os passos ab
    cd hotel-reservation
    ```
 
-2. **Instale as dependencias**
+2. **Variaveis de ambiente**
+
+   Crie um arquivo `.env` na raiz do projeto e cole os valores que estão no `.env.example`
+   ```bash
+    MONGO_URI=mongodb://root:example@mongo1:27017,mongo2:27017,mongo3:27017/hotel_reservation?replicaSet=rs0&authSource=admin
+    QUEUE_URL=http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/
+    S3_ENDPOINT=http://s3.us-east-1.localhost.localstack.cloud:4566
+   ```
+
+3. **Instale as dependencias**
 
    ```bash
    npm i
    ```
 
-3. **Suba o Ambiente Local com Docker Compose**
+4. **Suba o Ambiente Local com Docker Compose**
 
    ```bash
    docker-compose up
    ```
 
-4. **Implante a Aplicação com Serverless**
+5. **Implante a Aplicação com Serverless**
 
    ```bash
    npm run deploy:local
    ```
 
-5. **Acesse o Mongo Express (Opcional)**
+6. **Acesse o Mongo Express (Opcional)**
 
   Se precisar acessar o MongoDB visualmente, você pode utilizar o Mongo Express acessando http://localhost:8081 no navegador.
   | Username | Password |
   | :------: | :------: |
   | mexpress | mexpress |
 
-### Segue a collection completa
-[![download](./img/download.png)][1]
-
-### Como eu sei meu endpoint?
+### Url base das lambdas
 
 Após o deploy será gerada uma url conforme a imagem abaixo indica
 
-![img\deploy_url_gerada.png](./img/deploy_url_gerada.png)
+![./img/deploy_url_gerada.png](./img/deploy_url_gerada.png)
+
+### Segue a collection completa
+[![download](./img/download.png)][1]
+
+### Explicação da collection
+
+1. **Cole a url nas variaveis da collection**
+
+   Cole a url em Initial value e Current value
+
+   ![./img/url_base.png](./img/url_base.png)
+
+2. **Login e Cadastro**
+
+   Ao realizar login ou cadastro o token de acesso será salvo nas variaveis de ambiente devido o script de test no postman
+
+   ![./img/token.png](./img/token.png)
+
+3. **Ordem do fluxo feliz**
+
+   A Collection ja esta em ordem de cima para baixo, porém as request tb foram nomeadas com numeros em ordem crescente
+
+   ![./img/request-order.png](./img/request-order.png)
+
+4. **Reserva**
+
+   Após fazer uma reservar **"3-reservation-request"** o `_id` da reserva será salvo nas variaveis da collection para ser usado em **"4-get-proof-pdf"**
+
+   ![./img/reservation_id.png](./img/reservation_id.png)
+
+### Considerações finais
+
+1. **Pessimistic locking**
+
+   O Mongodb não oferece suporte nativo a `Pessimistic locking` foi implementado uma solução paleativa com a criação de um schema **lock-item**
+   o qual recebe apenas um _id sendo o _id do item q deseja travar dado que é um index unico e não sera duplicado, o problema dessa solução
+   é que simplemente será lançado uma exeção se o item já estiver travado, diferente do banco relacional que tem o comportamento de esperar o item ser liberado.
+
+   Por que não utilizei o `Optimistic locking`? Esse tipo de lock considera que não terá alta concorrencia pelo recurso, e uma de suas principais falhas é justamente
+   não garantir integridade em um ambiente com alta concorrencia, talvez seu uso seja valido em um cenario com fila SQS e menssagens com groupId definido para tentar  diminuir a concorrencia pelo recurso.
+
+2. **Url pré-assinada**
+
+   Todos os documentos gerados seram salvos no **bucket privado** `proof-payment`, ao invés de buscar o documento no **S3** e devolver um `buffer` na request optei
+   por gerar uma url pré-assinada com duração de **60 segundo**
 
 [1]: https://github.com/joelgon/hotel-reservation/releases/download/1/hotel.reservation.postman_collection.json
