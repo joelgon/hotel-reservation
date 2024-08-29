@@ -89,12 +89,12 @@ Após garantir que todos os requisitos acima estão atendidos, siga os passos ab
   | mexpress | mexpress |
 
 ### Segue a collection completa
-[![download](./download.png)][1]
+[![download](./img/download.png)][1]
 
 ### Como eu sei meu endpoint?
 
 Após o deploy será gerada uma url conforme a imagem abaixo indica
 
-![img\deploy_url_gerada.png](img\deploy_url_gerada.png)
+![img\deploy_url_gerada.png](./img/deploy_url_gerada.png)
 
 [1]: https://github.com/joelgon/hotel-reservation/releases/download/1/hotel.reservation.postman_collection.json
