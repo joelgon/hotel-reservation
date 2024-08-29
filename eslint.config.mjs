@@ -3,7 +3,6 @@ import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginPrettier from "eslint-plugin-prettier";
-import eslintPluginImport from "eslint-plugin-import";
 
 
 export default [
@@ -20,7 +19,6 @@ export default [
   {
     plugins: {
       prettier: eslintPluginPrettier,
-      import: eslintPluginImport
     },
     rules: {
       "prettier/prettier": "error",
