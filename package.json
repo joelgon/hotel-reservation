@@ -4,7 +4,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "deploy:local": "npx serverless deploy --stage local"
+    "deploy:local": "serverless deploy --stage local"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.637.0",

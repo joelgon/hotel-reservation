@@ -22,7 +22,7 @@ Você deve ter o AWS CLI v2 instalado. Se ainda não tiver instalado, siga as in
 
 O Docker deve estar instalado e rodando em sua máquina para que o LocalStack possa ser executado. Você pode instalar o Docker seguindo as instruções [aqui](https://docs.docker.com/get-docker/).
 
-### 3. Serverless Framework (opcional)
+### 3. Serverless Framework
 
 O Serverless Framework deve estar instalado em sua máquina. Você pode instalar o Serverless Framework seguindo as instruções [aqui](https://www.serverless.com/framework/docs/getting-started).
 
@@ -66,7 +66,7 @@ Após garantir que todos os requisitos acima estão atendidos, siga os passos ab
 
    Crie um arquivo `.env` na raiz do projeto e cole os valores que estão no `.env.example`
    ```bash
-    MONGO_URI=mongodb://root:example@mongo1:27017,mongo2:27017,mongo3:27017/hotel_reservation?replicaSet=rs0&authSource=admin
+    MONGO_URI=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/hotel_reservation?replicaSet=rs0&authSource=admin
     QUEUE_URL=http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/
     S3_ENDPOINT=http://s3.us-east-1.localhost.localstack.cloud:4566
    ```

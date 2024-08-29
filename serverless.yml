@@ -1,6 +1,8 @@
 app: hotel-reservation
 service: hotel-reservation
 
+frameworkVersion: "4.2.4"
+
 useDotenv: true
 
 provider:
